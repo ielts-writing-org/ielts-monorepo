@@ -1,0 +1,50 @@
+{
+	"name": "ielts-server",
+	"version": "1.0.0",
+	"type": "module",
+	"private": true,
+	"contributors": [
+		{
+			"name": "Phùng Văn Tú",
+			"email": "tuphung.03032004@gmail.com",
+			"url": "https://ptus04.id.vn"
+		},
+		{
+			"name": "Lê Tấn Phong",
+			"email": "letanphong400@gmail.com"
+		}
+	],
+	"scripts": {
+		"dev": "wrangler dev",
+		"deploy": "wrangler deploy --minify",
+		"check": "tsc --noEmit",
+		"cf-typegen": "wrangler types --env-interface CloudflareBindings",
+		"lint": "prettier --check . && eslint .",
+		"lint:fix": "eslint . --fix",
+		"format": "prettier --write .",
+		"test:unit": "vitest",
+		"test": "npm run test:unit -- --run"
+	},
+	"dependencies": {
+		"@hono/standard-validator": "^0.2.3",
+		"@ielts/shared": "github:ielts-writing-org/ielts-shared",
+		"@inferdi/hono": "^6.0.2",
+		"@scalar/hono-api-reference": "^0.12.0",
+		"hono": "^4.13.5",
+		"hono-openapi": "^1.3.1",
+		"zod": "^4.5.2"
+	},
+	"devDependencies": {
+		"@cloudflare/vitest-plugin": "^1.1.2",
+		"@hono/eslint-config": "^2.1.1",
+		"@types/node": "^26.4.0",
+		"@vitest/coverage-v8": "^4.1.11",
+		"globals": "^17.11.0",
+		"prettier": "^3.9.6",
+		"vitest": "^4.1.11",
+		"wrangler": "^4.127.1"
+	},
+	"allowScripts": {
+		"github:ielts-writing-org/ielts-shared": true
+	}
+}

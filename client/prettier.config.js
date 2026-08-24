@@ -7,7 +7,8 @@ const config = {
 	plugins: ['prettier-plugin-svelte', 'prettier-plugin-tailwindcss'],
 	overrides: [{ files: '*.svelte', options: { parser: 'svelte' } }],
 	tailwindStylesheet: './src/routes/layout.css',
-	bracketSameLine: true
+	bracketSameLine: true,
+	htmlWhitespaceSensitivity: 'ignore'
 };
 
 export default config;

@@ -5,6 +5,7 @@ import svelte from 'eslint-plugin-svelte';
 import { defineConfig, includeIgnoreFile } from 'eslint/config';
 import globals from 'globals';
 import ts from 'typescript-eslint';
+import tailwindCanonicalClasses from 'eslint-plugin-tailwind-canonical-classes';
 
 const gitignorePath = path.resolve(import.meta.dirname, '.gitignore');
 
@@ -15,6 +16,7 @@ export default defineConfig(
 	svelte.configs.recommended,
 	prettier,
 	svelte.configs.prettier,
+	...tailwindCanonicalClasses.configs['flat/recommended'],
 	{
 		languageOptions: { globals: { ...globals.browser, ...globals.node } },
 		rules: {
@@ -36,6 +38,21 @@ export default defineConfig(
 	{
 		// Override or add rule settings here, such as:
 		// 'svelte/button-has-type': 'error'
-		rules: {}
+		rules: {},
+		languageOptions: {
+			parserOptions: {
+				tsconfigRootDir: path.resolve(import.meta.dirname)
+			}
+		}
+	},
+	{
+		rules: {
+			'tailwind-canonical-classes/tailwind-canonical-classes': [
+				'warn',
+				{
+					cssPath: './src/routes/layout.css'
+				}
+			]
+		}
 	}
 );

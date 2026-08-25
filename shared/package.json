@@ -1,0 +1,58 @@
+{
+	"name": "@ielts/shared",
+	"version": "1.0.0",
+	"description": "A shared module that shares works across modules.",
+	"homepage": "https://github.com/ielts-writing-org/ielts-shared#readme",
+	"bugs": {
+		"url": "https://github.com/ielts-writing-org/ielts-shared/issues"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/ielts-writing-org/ielts-shared.git"
+	},
+	"author": "IELTS WRITING ORG",
+	"type": "module",
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"import": "./dist/index.js"
+		},
+		"./configs": {
+			"types": "./dist/configs/index.d.ts",
+			"import": "./dist/configs/index.js"
+		},
+		"./schemas": {
+			"types": "./dist/schemas/index.d.ts",
+			"import": "./dist/schemas/index.js"
+		},
+		"./utils": {
+			"types": "./dist/utils/index.d.ts",
+			"import": "./dist/utils/index.js"
+		}
+	},
+	"scripts": {
+		"check": "tsc --noEmit",
+		"build": "tsc -p tsconfig.build.json",
+		"format": "prettier --write .",
+		"lint": "prettier --check . && eslint .",
+		"lint:fix": "eslint . --fix",
+		"prepare": "npm run build",
+		"postinstall": "npm run build",
+		"test": "npm run test:unit -- --run",
+		"test:unit": "vitest"
+	},
+	"devDependencies": {
+		"@eslint/js": "^10.0.1",
+		"@types/node": "^26.2.0",
+		"@vitest/coverage-v8": "^4.1.11",
+		"eslint": "^10.9.0",
+		"eslint-config-prettier": "^10.1.8",
+		"globals": "^17.11.0",
+		"prettier": "^3.9.6",
+		"typescript-eslint": "^8.67.0",
+		"vitest": "^4.1.11"
+	},
+	"peerDependencies": {
+		"zod": "^4.5.2"
+	}
+}

@@ -13,7 +13,8 @@ export default defineConfig(
 		languageOptions: {
 			globals: globals.node,
 			parserOptions: {
-				projectService: true
+				projectService: true,
+				tsconfigRootDir: path.resolve(import.meta.dirname)
 			}
 		},
 		extends: [baseConfig]

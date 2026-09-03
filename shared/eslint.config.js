@@ -2,6 +2,7 @@ import js from "@eslint/js";
 import eslintConfigPrettier from "eslint-config-prettier";
 import { defineConfig, globalIgnores } from "eslint/config";
 import globals from "globals";
+import path from "node:path";
 import tseslint from "typescript-eslint";
 
 export default defineConfig(
@@ -11,7 +12,8 @@ export default defineConfig(
 		languageOptions: {
 			globals: { ...globals.browser, ...globals.node },
 			parserOptions: {
-				projectService: true
+				projectService: true,
+				tsconfigRootDir: path.resolve(import.meta.dirname)
 			}
 		},
 		extends: [...tseslint.configs.strictTypeChecked, ...tseslint.configs.stylisticTypeChecked]

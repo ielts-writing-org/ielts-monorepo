@@ -8,15 +8,10 @@
 
 In conclusion, the platform aims to make writing practice more interactive, responsive, and personalized, supporting continuous improvement in IELTS writing performance through immediate feedback and guided practice.
 
-## Requisites
+## Prerequisites
 
 1. NodeJS Runtime >=18.0.0.
-
-## ENVIRONMENT VARIABLES
-
-| VARIABLE                  | VALUE                                      |
-| ------------------------- | ------------------------------------------ |
-| PUBLIC_EVALUATION_API_URL | <http://localhost:8787/api/task2/evaluate> |
+2. A Cloudflare account.
 
 ## How to run the local development server
 
@@ -34,3 +29,20 @@ In conclusion, the platform aims to make writing practice more interactive, resp
    ```
 
 4. Follow the terminal's returns to continue.
+
+## ENVIRONMENT VARIABLES
+
+| VARIABLE       | VALUE                       |
+| -------------- | --------------------------- |
+| PUBLIC_API_URL | <http://localhost:8787/api> |
+
+## Endpoints
+
+Base: <http://localhost:8787>, <http://127.0.0.1:8787>
+
+| No  | Endpoint               | Description                          |
+| --- | ---------------------- | ------------------------------------ |
+| 1   | /                      | Application's health                 |
+| 2   | /openapi               | OpenAPI docs (JSON)                  |
+| 3   | /scalar                | ScalarUI                             |
+| 4   | /api/v1/task2/evaluate | Evaluate a task 2 writing submission |

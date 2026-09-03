@@ -11,7 +11,7 @@ export async function evaluateTask2(
 
 	const validRequest = z.parse(task2EvaluationRequestSchema, request);
 
-	const response = await fetch(env.PUBLIC_EVALUATION_API_URL, {
+	const response = await fetch(env.PUBLIC_API_URL + '/task2/evaluate', {
 		method: 'POST',
 		headers: { 'Content-Type': 'application/json' },
 		body: JSON.stringify(validRequest),

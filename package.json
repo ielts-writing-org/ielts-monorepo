@@ -1,0 +1,9 @@
+{
+  "name": "ielts-monorepo",
+  "private": true,
+  "workspaces": [
+    "server",
+    "shared",
+    "client"
+  ]
+}

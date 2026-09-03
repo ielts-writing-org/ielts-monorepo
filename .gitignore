@@ -15,11 +15,6 @@ dist/
 node_modules/
 .wrangler
 
-# env
-.env
-.env.production
-.dev.vars
-
 # logs
 logs/
 *.log
@@ -29,8 +24,31 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-# misc
-.DS_Store
+# Output
+.output
+.vercel
+.netlify
+.wrangler
+.svelte-kit
+build
 
+# OS
+.DS_Store
+Thumbs.db
+
+# Env
+.env
+.env.*
+!.env.example
+!.env.test
+
+# Vite
+vite.config.js.timestamp-*
+vite.config.ts.timestamp-*
+# Paraglide
+src/lib/paraglide
+project.inlang/cache/
+# Playwright
+test-results
 # @vitest/coverage-v8
 coverage/

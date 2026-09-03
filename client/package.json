@@ -49,13 +49,10 @@
 		"vitest-browser-svelte": "^2.1.1"
 	},
 	"dependencies": {
-		"@ielts/shared": "github:ielts-writing-org/ielts-shared",
+		"@ielts/shared": "*",
 		"@lucide/svelte": "^1.37.0",
 		"@streamparser/json": "^0.0.26",
 		"eventsource-parser": "^4.1.0",
 		"zod": "^4.5.4"
-	},
-	"allowScripts": {
-		"github:ielts-writing-org/ielts-shared": true
 	}
 }

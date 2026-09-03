@@ -27,7 +27,7 @@
 	},
 	"dependencies": {
 		"@hono/standard-validator": "^0.2.3",
-		"@ielts/shared": "github:ielts-writing-org/ielts-shared",
+		"@ielts/shared": "*",
 		"@inferdi/hono": "^6.0.2",
 		"@scalar/hono-api-reference": "^0.12.0",
 		"hono": "^4.13.5",
@@ -43,8 +43,5 @@
 		"prettier": "^3.9.6",
 		"vitest": "^4.1.11",
 		"wrangler": "^4.127.1"
-	},
-	"allowScripts": {
-		"github:ielts-writing-org/ielts-shared": true
 	}
 }

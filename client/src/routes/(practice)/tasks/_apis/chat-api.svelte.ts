@@ -9,7 +9,7 @@ export async function chatTask2(request: ChatRequest): Promise<ReadableStream<st
 
 	const validRequest = z.parse(chatRequestSchema, request);
 
-	const response = await fetch(env.PUBLIC_CHAT_API_URL, {
+	const response = await fetch(env.PUBLIC_API_URL + '/task2/chat', {
 		method: 'POST',
 		headers: { 'Content-Type': 'application/json' },
 		body: JSON.stringify(validRequest),

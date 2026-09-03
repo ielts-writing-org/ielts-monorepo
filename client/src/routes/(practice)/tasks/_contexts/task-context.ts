@@ -1,4 +1,4 @@
-import { createContext } from 'svelte';
+import { createContext } from "svelte";
 
 export type TaskContext = {
 	task_2: {

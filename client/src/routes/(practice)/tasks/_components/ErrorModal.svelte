@@ -13,7 +13,7 @@
 <dialog class="modal" bind:this={modal}>
 	<div class="modal-box">
 		<h3 class="text-lg font-bold">Error during evaluation</h3>
-		<p class="py-4">{errorMessage ?? 'There was an error during the evaluation process.'}</p>
+		<p class="py-4">{errorMessage ?? "There was an error during the process."}</p>
 		<div class="modal-action">
 			<form method="dialog">
 				<button class="btn">Close</button>

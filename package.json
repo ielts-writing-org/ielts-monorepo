@@ -1,9 +1,19 @@
 {
-  "name": "ielts-monorepo",
-  "private": true,
-  "workspaces": [
-    "server",
-    "shared",
-    "client"
-  ]
+	"name": "ielts-monorepo",
+	"private": true,
+	"workspaces": [
+		"server",
+		"shared",
+		"client"
+	],
+	"scripts": {
+		"check": "npm run check --workspaces --if-present",
+		"cf-typegen": "npm run cf-typegen --workspace=server --if-present",
+		"lint": "npm run lint --workspaces --if-present",
+		"lint:fix": "npm run lint:fix --workspaces --if-present",
+		"lint:format": "npm run lint:format --workspaces --if-present",
+		"test": "npm run test:unit -- --run && npm run test:e2e",
+		"test:unit": "npm run test:unit --workspaces --if-present -- --run",
+		"test:e2e": "npm run test:e2e --workspace=client --if-present"
+	}
 }

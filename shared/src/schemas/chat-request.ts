@@ -1,14 +1,14 @@
-import { z } from 'zod';
+import { z } from "zod";
 
-export const chatMessageSchema = z.discriminatedUnion('type', [
+export const chatMessageSchema = z.discriminatedUnion("type", [
 	z.object({
-		role: z.enum(['user', 'assistant']),
-		type: z.literal('content'),
+		role: z.enum(["user", "assistant"]),
+		type: z.literal("content"),
 		content: z.string().min(1)
 	}),
 	z.object({
-		role: z.literal('user'),
-		type: z.literal('context'),
+		role: z.literal("user"),
+		type: z.literal("context"),
 		context: z.object({
 			topic: z.string().min(1),
 			response_text: z.string().min(1)

@@ -45,10 +45,12 @@ Thumbs.db
 # Vite
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
-# Paraglide
-src/lib/paraglide
-project.inlang/cache/
+
 # Playwright
 test-results
+
 # @vitest/coverage-v8
 coverage/
+
+# Cloudflare wrangler generated files
+worker-configuration.d.ts

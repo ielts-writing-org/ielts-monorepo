@@ -1,1 +1,1 @@
-export * from './task2.ts';
+export * from "./task2.ts";

@@ -1,5 +1,5 @@
-import type { ChatMessage } from '@ielts/shared';
-import { createContext } from 'svelte';
+import type { ChatMessage } from "ielts-shared";
+import { createContext } from "svelte";
 
 export type ChatContext = ChatMessage[];
 

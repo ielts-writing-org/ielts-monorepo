@@ -1,8 +1,5 @@
 <script lang="ts">
-	import { resolve } from '$app/paths';
-	import { page } from '$app/state';
-	import type { Pathname } from '$app/types';
-	import { locales, localizeHref } from '$lib/paraglide/runtime';
+	import { resolve } from "$app/paths";
 
 	let { children } = $props();
 </script>
@@ -13,7 +10,7 @@
 		class="flex min-h-13.5 w-full flex-wrap items-center gap-4 border-b border-[#e2e7f1] bg-white px-4 py-2 sm:px-6 lg:flex-nowrap lg:gap-10 lg:px-9">
 		<a
 			class="flex min-w-29 items-center gap-2 text-[#202b40] no-underline"
-			href={resolve('/')}
+			href={resolve("/")}
 			aria-label="LexisWriting home">
 			<span
 				class="grid h-7.25 w-7.25 place-items-center rounded-lg bg-[#5045e8] text-[12px] font-extrabold text-white">
@@ -29,22 +26,22 @@
 			aria-label="Main navigation">
 			<a
 				class="rounded-lg bg-[#eef0ff] px-3 py-1.5 text-[12px] font-bold text-[#5045e8] no-underline"
-				href={resolve('/')}>
+				href={resolve("/")}>
 				Practice
 			</a>
 			<a
 				class="rounded-lg px-3 py-1.5 text-[12px] font-bold text-[#45536b] no-underline"
-				href={resolve('/')}>
+				href={resolve("/")}>
 				Progress
 			</a>
 			<a
 				class="rounded-lg px-3 py-1.5 text-[12px] font-bold text-[#45536b] no-underline"
-				href={resolve('/')}>
+				href={resolve("/")}>
 				History
 			</a>
 			<a
 				class="rounded-lg px-3 py-1.5 text-[12px] font-bold text-[#45536b] no-underline"
-				href={resolve('/')}>
+				href={resolve("/")}>
 				AI Tutor
 			</a>
 		</nav>
@@ -63,10 +60,4 @@
 	</header>
 
 	{@render children()}
-</div>
-
-<div style="display:none">
-	{#each locales as locale (locale)}
-		<a href={resolve(localizeHref(page.url.pathname, { locale }) as Pathname)}>{locale}</a>
-	{/each}
 </div>

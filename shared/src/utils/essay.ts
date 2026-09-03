@@ -17,7 +17,7 @@ export function computeDeterministicStats(text: string): DeterministicStats {
 }
 
 export function countCharacters(text: string): number {
-	return text.replaceAll(/[\r\n]/g, '').length;
+	return text.replaceAll(/[\r\n]/g, "").length;
 }
 
 export function countWords(text: string): number {

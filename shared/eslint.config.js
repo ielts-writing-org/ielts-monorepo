@@ -1,22 +1,24 @@
-import js from '@eslint/js';
-import eslintConfigPrettier from 'eslint-config-prettier';
-import { defineConfig, globalIgnores } from 'eslint/config';
-import globals from 'globals';
-import tseslint from 'typescript-eslint';
+import js from "@eslint/js";
+import eslintConfigPrettier from "eslint-config-prettier";
+import { defineConfig, globalIgnores } from "eslint/config";
+import globals from "globals";
+import tseslint from "typescript-eslint";
 
 export default defineConfig(
-	globalIgnores(['node_modules/**', 'dist/**', 'eslint.config.js', 'vitest.config.js']),
-	js.configs.recommended,
-	...tseslint.configs.strictTypeChecked,
-	...tseslint.configs.stylisticTypeChecked,
+	globalIgnores(["coverage/**"]),
 	{
-		files: ['**/*.ts'],
+		files: ["**/*.ts"],
 		languageOptions: {
-			globals: globals.node,
+			globals: { ...globals.browser, ...globals.node },
 			parserOptions: {
 				projectService: true
 			}
-		}
+		},
+		extends: [...tseslint.configs.strictTypeChecked, ...tseslint.configs.stylisticTypeChecked]
+	},
+	{
+		files: ["**/*.js"],
+		extends: [js.configs.recommended]
 	},
 	eslintConfigPrettier
 );

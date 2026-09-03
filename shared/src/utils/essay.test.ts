@@ -1,10 +1,10 @@
-import { describe, expect, test } from 'vitest';
-import { computeDeterministicStats, type DeterministicStats } from './essay.ts';
+import { describe, expect, test } from "vitest";
+import { computeDeterministicStats, type DeterministicStats } from "./essay.ts";
 
-describe('ESSAY UTILS TESTS', () => {
-	describe('DETERMINISTIC STATS TESTS', () => {
-		test('empty text', () => {
-			const stats = computeDeterministicStats('');
+describe("ESSAY UTILS TESTS", () => {
+	describe("DETERMINISTIC STATS TESTS", () => {
+		test("empty text", () => {
+			const stats = computeDeterministicStats("");
 
 			expect(stats).toEqual({
 				words: 0,
@@ -15,7 +15,7 @@ describe('ESSAY UTILS TESTS', () => {
 			} satisfies DeterministicStats);
 		});
 
-		test('normal text', () => {
+		test("normal text", () => {
 			const text = `This is a test. This is only a test.
 This is the second paragraph.`;
 
@@ -28,7 +28,7 @@ This is the second paragraph.`;
 			expect.soft(stats.averageSentenceLength).toBeCloseTo(4.6667, 4);
 		});
 
-		test('2 newline characters', () => {
+		test("2 newline characters", () => {
 			const text = `This is a test. This is only a test.
     
 This is the second paragraph.`;

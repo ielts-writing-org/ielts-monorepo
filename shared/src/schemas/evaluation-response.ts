@@ -1,10 +1,10 @@
-import { z } from 'zod';
+import { z } from "zod";
 
 // Positive
 const task2EvaluationCheckSchema = z.object({
 	id: z.string(),
 	weight: z.number().min(0).max(1),
-	status: z.enum(['met', 'partially_met', 'not_met', 'not_applicable']),
+	status: z.enum(["met", "partially_met", "not_met", "not_applicable"]),
 	evidence: z.string().max(200),
 	why: z.string().max(200)
 });

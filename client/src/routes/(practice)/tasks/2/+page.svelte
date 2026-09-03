@@ -1,8 +1,8 @@
 <script lang="ts">
-	import TutorPanel from '../_components/TutorPanel.svelte';
-	import { Lightbulb, Pilcrow } from '@lucide/svelte';
-	import { getTaskContext } from '../_contexts/task-context';
-	import { computeDeterministicStats, countCharacters } from '@ielts/shared';
+	import TutorPanel from "../_components/TutorPanel.svelte";
+	import { Lightbulb, Pilcrow } from "@lucide/svelte";
+	import { getTaskContext } from "../_contexts/task-context";
+	import { computeDeterministicStats, countCharacters } from "ielts-shared";
 
 	const taskContext = getTaskContext();
 

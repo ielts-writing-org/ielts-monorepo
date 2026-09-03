@@ -1,6 +1,6 @@
-import { env } from '$env/dynamic/public';
-import { task2EvaluationRequestSchema, type Task2EvaluationRequest } from '@ielts/shared/schemas';
-import z from 'zod';
+import { env } from "$env/dynamic/public";
+import { task2EvaluationRequestSchema, type Task2EvaluationRequest } from "ielts-shared/schemas";
+import z from "zod";
 
 const abortController = $state({ current: new AbortController() });
 
@@ -11,9 +11,9 @@ export async function evaluateTask2(
 
 	const validRequest = z.parse(task2EvaluationRequestSchema, request);
 
-	const response = await fetch(env.PUBLIC_API_URL + '/task2/evaluate', {
-		method: 'POST',
-		headers: { 'Content-Type': 'application/json' },
+	const response = await fetch(env.PUBLIC_API_URL + "/task2/evaluate", {
+		method: "POST",
+		headers: { "Content-Type": "application/json" },
 		body: JSON.stringify(validRequest),
 		signal: abortController.current.signal
 	});
@@ -21,7 +21,7 @@ export async function evaluateTask2(
 	if (
 		!response.ok ||
 		!response.body ||
-		response.headers.get('content-type') !== 'text/event-stream'
+		response.headers.get("content-type") !== "text/event-stream"
 	) {
 		throw new Error(
 			`Unexpected response from evaluation API: ${response.status} ${response.statusText}`

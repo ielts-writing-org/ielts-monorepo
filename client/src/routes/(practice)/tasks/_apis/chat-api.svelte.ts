@@ -1,6 +1,6 @@
-import { env } from '$env/dynamic/public';
-import { chatRequestSchema, type ChatRequest } from '@ielts/shared';
-import z from 'zod';
+import { env } from "$env/dynamic/public";
+import { chatRequestSchema, type ChatRequest } from "ielts-shared";
+import z from "zod";
 
 const abortController = $state({ current: new AbortController() });
 
@@ -9,9 +9,9 @@ export async function chatTask2(request: ChatRequest): Promise<ReadableStream<st
 
 	const validRequest = z.parse(chatRequestSchema, request);
 
-	const response = await fetch(env.PUBLIC_API_URL + '/task2/chat', {
-		method: 'POST',
-		headers: { 'Content-Type': 'application/json' },
+	const response = await fetch(env.PUBLIC_API_URL + "/task2/chat", {
+		method: "POST",
+		headers: { "Content-Type": "application/json" },
 		body: JSON.stringify(validRequest),
 		signal: abortController.current.signal
 	});
@@ -19,7 +19,7 @@ export async function chatTask2(request: ChatRequest): Promise<ReadableStream<st
 	if (
 		!response.ok ||
 		!response.body ||
-		response.headers.get('content-type') !== 'text/event-stream'
+		response.headers.get("content-type") !== "text/event-stream"
 	) {
 		throw new Error(`Unexpected response from chat API: ${response.status} ${response.statusText}`);
 	}

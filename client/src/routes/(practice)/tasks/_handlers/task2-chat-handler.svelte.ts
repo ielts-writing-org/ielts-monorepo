@@ -1,6 +1,6 @@
-import { EventSourceParserStream } from 'eventsource-parser/stream';
-import { chatTask2 } from '../_apis/chat-api.svelte';
-import type { ChatContext } from '../_contexts/chat-context';
+import { EventSourceParserStream } from "eventsource-parser/stream";
+import { chatTask2 } from "../_apis/chat-api.svelte";
+import type { ChatContext } from "../_contexts/chat-context";
 
 export class Task2ChatHandler {
 	result = $state<string | undefined>();
@@ -17,13 +17,13 @@ export class Task2ChatHandler {
 			const stream = await chatTask2(chatContext);
 			const reader = stream.pipeThrough(new EventSourceParserStream()).getReader();
 
-			this.result = '';
+			this.result = "";
 			while (true) {
 				const { done, value } = await reader.read();
-				if (done || value?.data === '[DONE]') {
+				if (done || value?.data === "[DONE]") {
 					break;
 				}
-				this.result += JSON.parse(value.data).choices?.[0]?.delta?.content ?? '';
+				this.result += JSON.parse(value.data).choices?.[0]?.delta?.content ?? "";
 			}
 		} catch (e) {
 			this.error = e instanceof Error ? e.message : String(e);

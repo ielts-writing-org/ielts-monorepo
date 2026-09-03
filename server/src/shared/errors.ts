@@ -1,4 +1,4 @@
-import { ZodError } from 'zod';
+import { ZodError } from "zod";
 
 export class AppError extends Error {
 	readonly status: number;
@@ -14,7 +14,7 @@ export class AppError extends Error {
 
 export class ConfigError extends AppError {
 	constructor(message: string, cause?: unknown) {
-		super(message, { status: 503, code: 'config_error', cause });
+		super(message, { status: 503, code: "config_error", cause });
 	}
 }
 
@@ -33,14 +33,14 @@ export function toErrorResponse(error: unknown): ErrorResponse {
 
 	if (error instanceof ZodError) {
 		const issues = error.issues.map((issue) => ({
-			path: issue.path.join('.'),
+			path: issue.path.join("."),
 			message: issue.message
 		}));
 		return {
 			status: 400,
 			body: {
-				error: 'validation_error',
-				message: 'Request body validation failed.',
+				error: "validation_error",
+				message: "Request body validation failed.",
 				issues
 			}
 		};
@@ -48,14 +48,14 @@ export function toErrorResponse(error: unknown): ErrorResponse {
 
 	console.error(
 		JSON.stringify({
-			level: 'error',
-			message: 'Unhandled error',
+			level: "error",
+			message: "Unhandled error",
 			...serializeError(error)
 		})
 	);
 	return {
 		status: 500,
-		body: { error: 'internal_error', message: 'Unexpected server error.' }
+		body: { error: "internal_error", message: "Unexpected server error." }
 	};
 }
 

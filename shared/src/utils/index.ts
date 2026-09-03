@@ -1,2 +1,2 @@
-export * from './essay.ts';
-export * from './math.ts';
+export * from "./essay.ts";
+export * from "./math.ts";

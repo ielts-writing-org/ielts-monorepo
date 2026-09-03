@@ -9,6 +9,7 @@
 		"jsx": "react-jsx",
 		"jsxImportSource": "hono/jsx",
 		"paths": {
+			// Rememeber to add aliases into vitest config
 			"@/*": ["./src/*"]
 		},
 		"verbatimModuleSyntax": true,

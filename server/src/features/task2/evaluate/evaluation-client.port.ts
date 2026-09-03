@@ -1,4 +1,4 @@
-import type { Task2EvaluationRequest } from '@ielts/shared/schemas';
+import type { Task2EvaluationRequest } from "ielts-shared/schemas";
 
 export type EvaluateCommand = Task2EvaluationRequest & {
 	deterministic: {

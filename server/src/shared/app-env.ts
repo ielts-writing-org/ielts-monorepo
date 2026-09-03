@@ -1,6 +1,6 @@
-import type { InferdiHonoEnv } from '@inferdi/hono';
-import { createFactory } from 'hono/factory';
-import type { RootContainer } from './container';
+import type { InferdiHonoEnv } from "@inferdi/hono";
+import { createFactory } from "hono/factory";
+import type { RootContainer } from "./container";
 
 export type AppEnv = {
 	Bindings: CloudflareBindings;

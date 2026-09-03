@@ -1,9 +1,7 @@
 <script lang="ts">
-	import { resolve } from '$app/paths';
-	import type { Pathname } from '$app/types';
-	import { getLocale, localizeHref } from '$lib/paraglide/runtime';
-	import { ArrowLeft, ArrowRight } from '@lucide/svelte';
-	import ThemeToggle from './ThemeToggle.svelte';
+	import { resolve } from "$app/paths";
+	import { ArrowLeft, ArrowRight } from "@lucide/svelte";
+	import ThemeToggle from "./ThemeToggle.svelte";
 
 	type TasksHeaderProps = {
 		onEvaluate: () => void;
@@ -15,9 +13,7 @@
 
 <header class="navbar sticky top-0 z-50 border-b border-base-300 bg-base-100">
 	<div class="navbar-start lg:gap-4">
-		<a
-			href={resolve(localizeHref('/', { locale: getLocale() }) as Pathname)}
-			class="lg:btn- btn btn-sm not-lg:btn-ghost lg:btn-md">
+		<a href={resolve("/")} class="lg:btn- btn btn-sm not-lg:btn-ghost lg:btn-md">
 			<ArrowLeft size="1em" />
 			<span class="hidden lg:inline">Dashboard</span>
 		</a>

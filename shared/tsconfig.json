@@ -6,13 +6,10 @@
 		"strict": true,
 		"skipLibCheck": true,
 		"lib": ["ESNext"],
-		"rootDir": "./src",
-		"outDir": "./dist",
+
 		"verbatimModuleSyntax": true,
 		"rewriteRelativeImportExtensions": true,
 		"forceConsistentCasingInFileNames": true,
-		"resolveJsonModule": true,
-		"noEmit": true
-	},
-	"include": ["./src/**/*.ts", "./src/**/*.d.ts"]
+		"resolveJsonModule": true
+	}
 }

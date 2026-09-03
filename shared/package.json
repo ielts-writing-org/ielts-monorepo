@@ -1,43 +1,18 @@
 {
-	"name": "@ielts/shared",
-	"version": "1.0.0",
-	"description": "A shared module that shares works across modules.",
-	"homepage": "https://github.com/ielts-writing-org/ielts-shared#readme",
-	"bugs": {
-		"url": "https://github.com/ielts-writing-org/ielts-shared/issues"
-	},
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/ielts-writing-org/ielts-shared.git"
-	},
-	"author": "IELTS WRITING ORG",
+	"name": "ielts-shared",
+	"private": true,
 	"type": "module",
 	"exports": {
-		".": {
-			"types": "./dist/index.d.ts",
-			"import": "./dist/index.js"
-		},
-		"./configs": {
-			"types": "./dist/configs/index.d.ts",
-			"import": "./dist/configs/index.js"
-		},
-		"./schemas": {
-			"types": "./dist/schemas/index.d.ts",
-			"import": "./dist/schemas/index.js"
-		},
-		"./utils": {
-			"types": "./dist/utils/index.d.ts",
-			"import": "./dist/utils/index.js"
-		}
+		".": "./src/index.ts",
+		"./configs": "./src/configs/index.ts",
+		"./schemas": "./src/schemas/index.ts",
+		"./utils": "./src/utils/index.ts"
 	},
 	"scripts": {
 		"check": "tsc --noEmit",
-		"build": "tsc -p tsconfig.build.json",
-		"format": "prettier --write .",
 		"lint": "prettier --check . && eslint .",
 		"lint:fix": "eslint . --fix",
-		"prepare": "npm run build",
-		"postinstall": "npm run build",
+		"lint:format": "prettier --write .",
 		"test": "npm run test:unit -- --run",
 		"test:unit": "vitest"
 	},
@@ -53,6 +28,6 @@
 		"vitest": "^4.1.11"
 	},
 	"peerDependencies": {
-		"zod": "^4.5.2"
+		"zod": "^4.5.4"
 	}
 }

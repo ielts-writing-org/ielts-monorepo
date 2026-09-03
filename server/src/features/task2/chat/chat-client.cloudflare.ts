@@ -1,6 +1,6 @@
-import { EVALUATION_MODEL } from '../shared/config';
-import type { ConfigsProvider } from '../shared/configs-provider.port';
-import type { ChatClient, ChatCommand } from './chat-client.port';
+import { EVALUATION_MODEL } from "../shared/config";
+import type { ConfigsProvider } from "../shared/configs-provider.port";
+import type { ChatClient, ChatCommand } from "./chat-client.port";
 
 export class CloudflareChatClient implements ChatClient {
 	constructor(
@@ -12,9 +12,9 @@ export class CloudflareChatClient implements ChatClient {
 		const configs = await this.configsProvider.get();
 
 		const messages = [
-			{ role: 'system', content: configs.chatPrompt },
+			{ role: "system", content: configs.chatPrompt },
 			...command.map((c) => {
-				if (c.type === 'content') {
+				if (c.type === "content") {
 					return { role: c.role, content: c.content };
 				} else {
 					return {

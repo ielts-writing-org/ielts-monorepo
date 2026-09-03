@@ -1,12 +1,12 @@
 <script lang="ts">
-	import { Moon, Sun } from '@lucide/svelte';
+	import { Moon, Sun } from "@lucide/svelte";
 
 	const handleChangeTheme = (
 		event: ToggleEvent & { currentTarget: EventTarget & HTMLInputElement }
 	) => {
 		document.documentElement.setAttribute(
-			'data-theme',
-			event.currentTarget.checked ? 'light' : event.currentTarget.value
+			"data-theme",
+			event.currentTarget.checked ? "light" : event.currentTarget.value
 		);
 	};
 </script>

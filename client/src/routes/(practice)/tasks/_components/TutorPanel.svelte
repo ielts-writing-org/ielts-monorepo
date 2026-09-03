@@ -1,23 +1,23 @@
 <script lang="ts">
-	import type { Task2EvaluationResponse } from '@ielts/shared/schemas';
-	import { Send } from '@lucide/svelte';
-	import { getTaskContext } from '../_contexts/task-context';
-	import { setChatContext, type ChatContext } from '../_contexts/chat-context';
-	import { getHandlerContext } from '../_contexts/handler-context';
+	import type { Task2EvaluationResponse } from "ielts-shared/schemas";
+	import { Send } from "@lucide/svelte";
+	import { getTaskContext } from "../_contexts/task-context";
+	import { setChatContext, type ChatContext } from "../_contexts/chat-context";
+	import { getHandlerContext } from "../_contexts/handler-context";
 
 	const criteriaMap = {
-		task_response: 'Task Response',
-		coherence_and_cohesion: 'Coherence and Cohesion',
-		lexical_resource: 'Lexical Resource',
-		grammatical_range_and_accuracy: 'Grammatical Range and Accuracy'
-	} as const satisfies Record<keyof Task2EvaluationResponse['criteria'], string>;
+		task_response: "Task Response",
+		coherence_and_cohesion: "Coherence and Cohesion",
+		lexical_resource: "Lexical Resource",
+		grammatical_range_and_accuracy: "Grammatical Range and Accuracy"
+	} as const satisfies Record<keyof Task2EvaluationResponse["criteria"], string>;
 
 	const taskContext = getTaskContext();
 
 	const INITIAL_CHAT_CONTEXT: ChatContext = [
 		{
-			role: 'user',
-			type: 'context',
+			role: "user",
+			type: "context",
 			context: {
 				topic: taskContext.task_2.topic,
 				response_text: taskContext.task_2.response
@@ -31,25 +31,25 @@
 	handlerContext.task2ChatHandler.onEnd = (isSuccess) => {
 		if (isSuccess && handlerContext.task2ChatHandler.result) {
 			chatContext.push({
-				role: 'assistant',
-				type: 'content',
+				role: "assistant",
+				type: "content",
 				content: handlerContext.task2ChatHandler.result
 			});
 		}
 	};
 
-	let chatInput = $state<string>('');
+	let chatInput = $state<string>("");
 
 	const handleChatSubmit = async () => {
-		if (chatInput.trim() === '') return;
+		if (chatInput.trim() === "") return;
 
 		chatContext.push({
-			role: 'user',
-			type: 'content',
+			role: "user",
+			type: "content",
 			content: chatInput
 		});
 
-		chatInput = '';
+		chatInput = "";
 
 		await handlerContext.task2ChatHandler.run(chatContext);
 	};
@@ -80,7 +80,7 @@
 				<details class="collapse-arrow collapse bg-base-100">
 					<summary class="collapse-title cursor-pointer p-0 font-semibold">
 						<p>
-							{criteriaMap[criterion as keyof Task2EvaluationResponse['criteria']] || criterion}
+							{criteriaMap[criterion as keyof Task2EvaluationResponse["criteria"]] || criterion}
 						</p>
 						{#if evaluation.band}
 							<p
@@ -110,12 +110,12 @@
 													<span>{check.id}</span>
 													<span
 														class={[
-															'badge badge-sm',
+															"badge badge-sm",
 															{
-																'badge-success': check.status === 'met',
-																'badge-warning': check.status === 'partially_met',
-																'badge-error': check.status === 'not_met',
-																'badge-ghost': check.status === 'not_applicable'
+																"badge-success": check.status === "met",
+																"badge-warning": check.status === "partially_met",
+																"badge-error": check.status === "not_met",
+																"badge-ghost": check.status === "not_applicable"
 															}
 														]}>
 														{check.status}
@@ -175,13 +175,13 @@
 			<p class="text-base-content/75">No chats yet.</p>
 		{:else}
 			{#each chatContext as chat, index (index)}
-				{#if chat.type === 'content'}
+				{#if chat.type === "content"}
 					<div
 						class="chat"
-						class:chat-start={chat.role === 'assistant'}
-						class:chat-end={chat.role === 'user'}>
-						<p class="chat-header">{chat.role === 'user' ? 'You' : 'AI Tutor'}</p>
-						<p class="chat-bubble" class:chat-bubble-primary={chat.role === 'user'}>
+						class:chat-start={chat.role === "assistant"}
+						class:chat-end={chat.role === "user"}>
+						<p class="chat-header">{chat.role === "user" ? "You" : "AI Tutor"}</p>
+						<p class="chat-bubble" class:chat-bubble-primary={chat.role === "user"}>
 							{chat.content}
 						</p>
 					</div>

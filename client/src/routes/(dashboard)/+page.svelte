@@ -1,71 +1,69 @@
 <script lang="ts">
-	import { goto } from '$app/navigation';
-	import { resolve } from '$app/paths';
-	import type { Pathname } from '$app/types';
-	import { localizeHref } from '$lib/paraglide/runtime';
-	import { ArrowRight, Check, ChevronRight, Clock3, MessageCircle, Sparkles } from '@lucide/svelte';
+	import { goto } from "$app/navigation";
+	import { resolve } from "$app/paths";
+	import { ArrowRight, Check, ChevronRight, Clock3, MessageCircle, Sparkles } from "@lucide/svelte";
 
 	const sessions = [
 		{
-			task: 'Task 2',
-			title: 'Opinion: Remote Working Impact',
-			meta: 'Yesterday',
-			area: 'Task Response',
-			band: '6.5'
+			task: "Task 2",
+			title: "Opinion: Remote Working Impact",
+			meta: "Yesterday",
+			area: "Task Response",
+			band: "6.5"
 		},
 		{
-			task: 'Task 1',
-			title: 'Bar Chart: Energy Consumption',
-			meta: '3 days ago',
-			area: 'Grammar Range',
-			band: '7.0'
+			task: "Task 1",
+			title: "Bar Chart: Energy Consumption",
+			meta: "3 days ago",
+			area: "Grammar Range",
+			band: "7.0"
 		},
 		{
-			task: 'Task 2',
-			title: 'Discussion: University Tuition Fees',
-			meta: '5 days ago',
-			area: 'Coherence',
-			band: '6.5'
+			task: "Task 2",
+			title: "Discussion: University Tuition Fees",
+			meta: "5 days ago",
+			area: "Coherence",
+			band: "6.5"
 		}
 	];
 
 	const criteria = [
 		{
-			name: 'Task Response / Achievement',
-			direction: 'up',
-			score: '6.5',
-			bar: 'w-[73%] bg-[#5a50ea]',
-			scoreColor: 'text-[#5045eb]',
-			note: 'Main idea clear; expand supporting arguments.'
+			name: "Task Response / Achievement",
+			direction: "up",
+			score: "6.5",
+			bar: "w-[73%] bg-[#5a50ea]",
+			scoreColor: "text-[#5045eb]",
+			note: "Main idea clear; expand supporting arguments."
 		},
 		{
-			name: 'Coherence & Cohesion',
-			direction: 'steady',
-			score: '7.0',
-			bar: 'w-[78%] bg-[#8841ea]',
-			scoreColor: 'text-[#5045eb]',
-			note: 'Logical paragraphing; diverse linking words.'
+			name: "Coherence & Cohesion",
+			direction: "steady",
+			score: "7.0",
+			bar: "w-[78%] bg-[#8841ea]",
+			scoreColor: "text-[#5045eb]",
+			note: "Logical paragraphing; diverse linking words."
 		},
 		{
-			name: 'Lexical Resource',
-			direction: 'up',
-			score: '7.0',
-			bar: 'w-[78%] bg-[#07966e]',
-			scoreColor: 'text-[#039b78]',
-			note: 'Good academic collocations; reduce repetition.'
+			name: "Lexical Resource",
+			direction: "up",
+			score: "7.0",
+			bar: "w-[78%] bg-[#07966e]",
+			scoreColor: "text-[#039b78]",
+			note: "Good academic collocations; reduce repetition."
 		},
 		{
-			name: 'Grammar Range & Accuracy',
-			direction: 'up',
-			score: '6.0',
-			bar: 'w-[60%] bg-[#e58600]',
-			scoreColor: 'text-[#e68500]',
-			note: 'Accurate simple sentences; watch comma splices.'
+			name: "Grammar Range & Accuracy",
+			direction: "up",
+			score: "6.0",
+			bar: "w-[60%] bg-[#e58600]",
+			scoreColor: "text-[#e68500]",
+			note: "Accurate simple sentences; watch comma splices."
 		}
 	];
 
 	const gotoTask2 = () => {
-		goto(resolve(localizeHref('/tasks/2') as Pathname));
+		goto(resolve("/tasks/2"));
 	};
 </script>
 
@@ -224,9 +222,9 @@
 						<strong>
 							{criterion.name}
 							<em
-								class:text-[#6d7688]={criterion.direction === 'steady'}
+								class:text-[#6d7688]={criterion.direction === "steady"}
 								class="ml-0.5 text-[#039b78] not-italic">
-								{criterion.direction === 'steady' ? '→' : '↑'}
+								{criterion.direction === "steady" ? "→" : "↑"}
 							</em>
 						</strong>
 						<b class={criterion.scoreColor}>{criterion.score}</b>
@@ -249,7 +247,7 @@
 				<h2 class="text-[12px] font-bold">Recent Practice Sessions</h2>
 				<a
 					class="flex items-center text-[9px] font-extrabold text-[#5a50ea] no-underline"
-					href={resolve('/')}>
+					href={resolve("/")}>
 					View complete history <ChevronRight size={14} />
 				</a>
 			</div>

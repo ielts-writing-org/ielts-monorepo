@@ -9,11 +9,27 @@
 	"scripts": {
 		"check": "npm run check --workspaces --if-present",
 		"cf-typegen": "npm run cf-typegen --workspace=server --if-present",
+		"deps:init": "depcruise --init",
+		"deps": "npm run deps:shared && npm run deps:server && npm run deps:client",
+		"deps:shared": "cd shared && depcruise -c ../.dependency-cruiser.js src --ts-config tsconfig.json -T err-html -f ../depcruise-shared-error.html",
+		"deps:server": "cd server && depcruise -c ../.dependency-cruiser.js src --ts-config tsconfig.json -T err-html -f ../depcruise-server-error.html",
+		"deps:client": "cd client && depcruise -c ../.dependency-cruiser.js src --ts-config tsconfig.json -T err-html -f ../depcruise-client-error.html",
+		"deps:html": "npm run deps:html:shared && npm run deps:html:server && npm run deps:html:client",
+		"deps:html:shared": "cd shared && depcruise -c ../.dependency-cruiser.js src --ts-config tsconfig.json -T err-html -f ../depcruise-shared.html",
+		"deps:html:server": "cd server && depcruise -c ../.dependency-cruiser.js src --ts-config tsconfig.json -T err-html -f ../depcruise-server.html",
+		"deps:html:client": "cd client && depcruise -c ../.dependency-cruiser.js src --ts-config tsconfig.json -T err-html -f ../depcruise-client.html",
 		"lint": "npm run lint --workspaces --if-present",
+		"lint:deps": "npm run lint:deps:shared && npm run lint:deps:server && npm run lint:deps:client",
+		"lint:deps:shared": "cd shared && depcruise -c ../.dependency-cruiser.js src --ts-config tsconfig.json",
+		"lint:deps:server": "cd server && depcruise -c ../.dependency-cruiser.js src --ts-config tsconfig.json",
+		"lint:deps:client": "cd client && depcruise -c ../.dependency-cruiser.js src --ts-config tsconfig.json",
 		"lint:fix": "npm run lint:fix --workspaces --if-present",
 		"lint:format": "npm run lint:format --workspaces --if-present",
-		"test": "npm run test:unit -- --run && npm run test:e2e",
+		"test": "npm run test:unit && npm run test:e2e",
 		"test:unit": "npm run test:unit --workspaces --if-present -- --run",
 		"test:e2e": "npm run test:e2e --workspace=client --if-present"
+	},
+	"devDependencies": {
+		"dependency-cruiser": "*"
 	}
 }

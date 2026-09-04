@@ -17,6 +17,10 @@
 		"test": "npm run test:unit -- --run",
 		"test:unit": "vitest"
 	},
+	"dependencies": {
+		"harper.js": "^2.7.0",
+		"zod": "^4.5.4"
+	},
 	"devDependencies": {
 		"@eslint/js": "^10.0.1",
 		"@types/node": "^26.2.0",
@@ -27,8 +31,5 @@
 		"prettier": "^3.9.6",
 		"typescript-eslint": "^8.67.0",
 		"vitest": "^4.1.11"
-	},
-	"peerDependencies": {
-		"zod": "^4.5.4"
 	}
 }

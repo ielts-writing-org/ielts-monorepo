@@ -1,8 +1,9 @@
 <script lang="ts">
-	import TutorPanel from "../_components/TutorPanel.svelte";
 	import { Lightbulb, Pilcrow } from "@lucide/svelte";
-	import { getTaskContext } from "../_contexts/task-context";
 	import { computeDeterministicStats, countCharacters } from "ielts-shared";
+	import ChatPanel from "../_components/ChatPanel.svelte";
+	import EvaluationPanel from "../_components/EvaluationPanel.svelte";
+	import { getTaskContext } from "../_contexts/task-context";
 
 	const taskContext = getTaskContext();
 
@@ -18,7 +19,7 @@
 <main class="flex flex-col gap-4 p-2 md:flex-row">
 	<section class="flex flex-1 flex-col gap-4 xl:flex-2">
 		<div
-			class="prose flex max-w-none flex-col gap-2 rounded-md border border-base-300 bg-base-100 p-2">
+			class="prose flex max-w-none flex-col gap-2 rounded-md border border-base-content/20 bg-base-100 p-2">
 			<div class="flex items-center justify-between">
 				<div>
 					<Lightbulb size="1em" class="inline text-primary" />
@@ -29,14 +30,14 @@
 				</span>
 			</div>
 			<div
-				class="textarea w-full flex-1"
+				class="textarea w-full flex-1 border-none"
 				spellcheck="false"
 				contenteditable="plaintext-only"
 				bind:innerText={taskContext.task_2.topic}>
 			</div>
 		</div>
 
-		<div class="flex flex-1 flex-col rounded-md border border-base-300 bg-base-100">
+		<div class="flex flex-1 flex-col rounded-md border border-base-content/20 bg-base-100">
 			<div class="prose flex max-w-none flex-1 flex-col gap-2 border-b border-base-300 p-2">
 				<div class="flex items-center justify-between">
 					<div>
@@ -46,7 +47,7 @@
 					<span class="text-sm">{stats.words}/250 words</span>
 				</div>
 				<div
-					class="textarea w-full flex-1"
+					class="textarea w-full flex-1 border-none"
 					spellcheck="false"
 					contenteditable="plaintext-only"
 					bind:innerText={taskContext.task_2.response}>
@@ -63,5 +64,8 @@
 		</div>
 	</section>
 
-	<TutorPanel />
+	<aside class="sticky top-[10.5%] flex h-[calc(100dvh-6rem)] flex-1 flex-col gap-4 xl:top-[9.5%]">
+		<EvaluationPanel />
+		<ChatPanel />
+	</aside>
 </main>

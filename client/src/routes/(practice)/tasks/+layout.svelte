@@ -1,6 +1,8 @@
 <script lang="ts">
+	import { resolve } from "$app/paths";
+	import { ArrowLeft, ArrowRight } from "@lucide/svelte";
 	import ErrorModal from "./_components/ErrorModal.svelte";
-	import TasksHeader from "./_components/TasksHeader.svelte";
+	import ThemeToggle from "./_components/ThemeToggle.svelte";
 	import { setHandlerContext } from "./_contexts/handler-context";
 	import { setTaskContext, type TaskContext } from "./_contexts/task-context";
 	import { Task2ChatHandler } from "./_handlers/task2-chat-handler.svelte";
@@ -33,11 +35,38 @@ First and foremost, engaging in community initiatives exposes adolescents to rea
 		task2EvaluationHandler: task2Evaluation,
 		task2ChatHandler: task2Chat
 	});
+
+	const handleEvaluate = () => {
+		task2Evaluation.run(taskContext.task_2.topic, taskContext.task_2.response);
+	};
 </script>
 
-<TasksHeader
-	onEvaluate={() => task2Evaluation.run(taskContext.task_2.topic, taskContext.task_2.response)}
-	isEvaluating={task2Evaluation.isEvaluating} />
+<header class="navbar sticky top-0 z-50 mb-2 bg-base-200 shadow">
+	<div class="navbar-start lg:gap-4">
+		<a href={resolve("/")} class="btn btn-sm not-lg:btn-ghost lg:btn-md">
+			<ArrowLeft size="1em" />
+			<span class="hidden lg:inline">Dashboard</span>
+		</a>
+		<div>
+			<h2 class="font-bold lg:hidden">Task 2</h2>
+			<h2 class="hidden font-bold lg:block">IELTS Writing Task 2</h2>
+			<h3 class="hidden text-xs lg:block">Write an essay on the given topic</h3>
+		</div>
+	</div>
+
+	<ThemeToggle />
+
+	<div class="navbar-end">
+		<button
+			class="group btn btn-primary"
+			onclick={handleEvaluate}
+			disabled={task2Evaluation.isEvaluating}>
+			<span class="loading loading-spinner not-group-disabled:hidden"></span>
+			Evaluate
+			<ArrowRight size="1em" />
+		</button>
+	</div>
+</header>
 
 <ErrorModal bind:modal={errorModal} errorMessage={errorModalMessage} />
 

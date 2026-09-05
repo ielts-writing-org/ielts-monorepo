@@ -11,14 +11,8 @@
 	};
 </script>
 
-<div>
-	<label class="flex cursor-pointer gap-2">
-		<Sun />
-		<input
-			type="checkbox"
-			value="dark"
-			class="theme-controller toggle"
-			ontoggle={handleChangeTheme} />
-		<Moon />
-	</label>
-</div>
+<label class="swap swap-rotate">
+	<input type="checkbox" value="night" class="theme-controller" ontoggle={handleChangeTheme} />
+	<Sun class="swap-on" />
+	<Moon class="swap-off" />
+</label>

@@ -11,6 +11,10 @@
 	},
 	"scripts": {
 		"check": "tsc --noEmit",
+		"dep": "depcruise -c ../.dependency-cruiser.js src --ts-config tsconfig.json -T err-html -f ../depcruise-shared-error.html",
+		"dep:d2": "depcruise -c ../.dependency-cruiser.js src --ts-config tsconfig.json -T d2 | d2 play -",
+		"dep:html": "depcruise -c ../.dependency-cruiser.js src --ts-config tsconfig.json -T err-html -f ../depcruise-shared.html",
+		"dep:lint": "depcruise -c ../.dependency-cruiser.js src --ts-config tsconfig.json",
 		"lint": "prettier --check . && eslint .",
 		"lint:fix": "eslint . --fix",
 		"lint:format": "prettier --write .",

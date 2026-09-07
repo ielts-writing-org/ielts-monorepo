@@ -1,71 +1,47 @@
 <script lang="ts">
+	import TextEditor from "$lib/components/TextEditor.svelte";
+	import { setTaskContext, type TaskContext } from "$lib/contexts/task-context";
+	import ChatPanel from "$lib/features/chat/ChatPanel.svelte";
+	import EvaluationPanel from "$lib/features/evaluate/EvaluationPanel.svelte";
 	import { Lightbulb, Pilcrow } from "@lucide/svelte";
-	import { computeDeterministicStats, countCharacters } from "ielts-shared";
-	import ChatPanel from "../_components/ChatPanel.svelte";
-	import EvaluationPanel from "../_components/EvaluationPanel.svelte";
-	import { getTaskContext } from "../_contexts/task-context";
 
-	const taskContext = getTaskContext();
-
-	let stats = $derived(computeDeterministicStats(taskContext.task_2.response));
+	const INITIAL_TASKS: TaskContext = {
+		task_2: {
+			topic:
+				"Should unpaid community service be compulsory in high school? (Work for charities, neighbourhood improvement, sports mentoring). Discuss both views and give your opinion.",
+			response: `In recent years, whether high school students should be required to participate in unpaid community work has sparked widespread debate. While some argue that academic focus should remain the sole priority, I firmly agree that mandatory voluntary programmes cultivate crucial civic values, develop practical teamwork abilities, and foster empathy among adolescents.
+First and foremost, engaging in community initiatives exposes adolescents to real-world societal challenges outside the classroom. By assisting local charities, cleaning public parks, or mentoring younger children, pupils gain firsthand awareness of social inequality and civic responsibility.`
+		}
+	};
+	const taskContext = $state<TaskContext>(INITIAL_TASKS);
+	setTaskContext(taskContext);
 </script>
 
 <svelte:head>
 	<title>Task 2 | IELTS Writing</title>
 	<meta name="description" content="IELTS Writing Task 2" />
-	<link rel="icon" href="/favicon.svg" />
 </svelte:head>
 
 <main class="flex flex-col gap-4 p-2 md:flex-row">
 	<section class="flex flex-1 flex-col gap-4 xl:flex-2">
-		<div
-			class="prose flex max-w-none flex-col gap-2 rounded-md border border-base-content/20 bg-base-100 p-2">
-			<div class="flex items-center justify-between">
-				<div>
-					<Lightbulb size="1em" class="inline text-primary" />
-					<p class="inline font-bold text-primary uppercase">Writing task 2 topic</p>
-				</div>
-				<span class="text-sm">
-					{countCharacters(taskContext.task_2.topic)}/350 characters
-				</span>
-			</div>
-			<div
-				class="textarea w-full flex-1 border-none"
-				spellcheck="false"
-				contenteditable="plaintext-only"
-				bind:innerText={taskContext.task_2.topic}>
-			</div>
-		</div>
+		<TextEditor
+			title="Writing task 2 topic"
+			bind:value={taskContext.task_2.topic}
+			enableStatistics={false}>
+			{#snippet icon()}
+				<Lightbulb size="1em" class="inline text-primary" />
+			{/snippet}
+		</TextEditor>
 
-		<div class="flex flex-1 flex-col rounded-md border border-base-content/20 bg-base-100">
-			<div class="prose flex max-w-none flex-1 flex-col gap-2 border-b border-base-300 p-2">
-				<div class="flex items-center justify-between">
-					<div>
-						<Pilcrow size="1em" class="inline align-text-bottom text-primary" />
-						<p class="inline font-bold text-primary uppercase">Essay workspace</p>
-					</div>
-					<span class="text-sm">{stats.words}/250 words</span>
-				</div>
-				<div
-					class="textarea w-full flex-1 border-none"
-					spellcheck="false"
-					contenteditable="plaintext-only"
-					bind:innerText={taskContext.task_2.response}>
-				</div>
-			</div>
-
-			<div
-				class="flex flex-wrap gap-x-4 gap-y-2 rounded-b-lg bg-base-300 p-2 text-sm font-semibold">
-				<p>Paragraphs: {stats.paragraphs}</p>
-				<p>Sentences: {stats.sentences}</p>
-				<p>Characters: {stats.characters}</p>
-				<p>Avg. Sentence Length: {stats.averageSentenceLength.toFixed(0)} words</p>
-			</div>
-		</div>
+		<TextEditor class="flex-1" title="Essay workspace" bind:value={taskContext.task_2.response}>
+			{#snippet icon()}
+				<Pilcrow size="1em" class="inline align-text-bottom text-primary" />
+			{/snippet}
+		</TextEditor>
 	</section>
 
 	<aside class="sticky top-[10.5%] flex h-[calc(100dvh-6rem)] flex-1 flex-col gap-4 xl:top-[9.5%]">
-		<EvaluationPanel />
-		<ChatPanel />
+		<EvaluationPanel taskContext={{ ...taskContext.task_2 }} />
+		<ChatPanel taskContext={{ ...taskContext.task_2 }} />
 	</aside>
 </main>

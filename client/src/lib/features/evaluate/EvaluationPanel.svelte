@@ -1,6 +1,14 @@
 <script lang="ts">
+	import { errorModal } from "$lib/components/ErrorModal.svelte";
 	import type { Task2EvaluationResponse } from "ielts-shared/schemas";
-	import { getHandlerContext } from "../_contexts/handler-context";
+	import { EvaluationHandler } from "./handler.svelte";
+
+	type EvaluationPanelProps = {
+		// TODO: Add evaluations if existed
+		taskContext: { topic: string; response: string };
+	};
+
+	const { taskContext }: EvaluationPanelProps = $props();
 
 	const criteriaMap = {
 		task_response: "Task Response",
@@ -9,15 +17,29 @@
 		grammatical_range_and_accuracy: "Grammatical Range and Accuracy"
 	} as const satisfies Record<keyof Task2EvaluationResponse["criteria"], string>;
 
-	const handlerContext = getHandlerContext();
+	const evaluationHandler = new EvaluationHandler();
+	evaluationHandler.onError = (errorMessage) => {
+		errorModal?.setErrorMessage(errorMessage);
+		errorModal?.showErrorModal();
+	};
+
+	const handleEvaluate = async () => {
+		await evaluationHandler.execute(taskContext.topic, taskContext.response);
+	};
 </script>
 
 <div class="flex justify-between">
 	<div class="flex items-center gap-2">
-		<h3 class="text-xl font-semibold">AI Tutor</h3>
+		<button
+			class="group btn btn-soft btn-primary"
+			onclick={handleEvaluate}
+			disabled={evaluationHandler.isExecuting}>
+			<span class="loading loading-spinner not-group-disabled:hidden"></span>
+			Evaluate
+		</button>
 	</div>
-	{#if handlerContext.task2EvaluationHandler.result}
-		{@const overallBand = handlerContext.task2EvaluationHandler.result.overall_band}
+	{#if evaluationHandler.reponse}
+		{@const overallBand = evaluationHandler.reponse.overall_band}
 		{#if overallBand}
 			<p class="badge badge-info">Est. Band {overallBand.toPrecision(2)}</p>
 		{:else}
@@ -28,10 +50,10 @@
 
 <div
 	class="flex flex-1 flex-col gap-2 overflow-y-auto rounded-md border border-base-content/20 p-3">
-	{#if handlerContext.task2EvaluationHandler.result === undefined}
+	{#if evaluationHandler.reponse === undefined}
 		<p class="text-base-content/75">No evaluations yet.</p>
 	{:else}
-		{#each Object.entries(handlerContext.task2EvaluationHandler.result.criteria) as [criterion, evaluation] (criterion)}
+		{#each Object.entries(evaluationHandler.reponse.criteria) as [criterion, evaluation] (criterion)}
 			<details class="collapse-arrow collapse bg-base-100">
 				<summary class="collapse-title cursor-pointer p-0 font-semibold">
 					<p>

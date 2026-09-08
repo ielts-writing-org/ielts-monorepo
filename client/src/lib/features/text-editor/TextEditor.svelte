@@ -1,12 +1,12 @@
 <script lang="ts">
-	import { HarperLinter } from "$lib/features/text-editor/lint/harper-linter";
+	import { HarperLinter } from "$lib/features/text-editor/harper-linter";
 	import {
 		calculateLintRects,
 		type EditorLint,
 		getLintStyle,
 		type RenderedLint,
 		toEditorLint
-	} from "$lib/features/text-editor/lint/lint-utils";
+	} from "$lib/features/text-editor/lint-utils";
 	import { debounce } from "$lib/shared/debounce";
 	import { computeDeterministicStats } from "ielts-shared";
 	import { onMount, type Snippet } from "svelte";

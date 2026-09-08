@@ -88,8 +88,7 @@ module.exports = {
 				"in your package.json.",
 			from: {},
 			to: {
-				dependencyTypes: ["npm-no-pkg", "npm-unknown"],
-				pathNot: ["node_modules/@sveltejs/kit/types", "node_modules/harper.js/dist"]
+				dependencyTypes: ["npm-no-pkg", "npm-unknown"]
 			}
 		},
 		{
@@ -151,11 +150,7 @@ module.exports = {
 				// type only dependencies are not a problem as they don't end up in the
 				// production code or are ignored by the runtime.
 				dependencyTypesNot: ["type-only"],
-				pathNot: [
-					"node_modules/@types/",
-					"node_modules/svelte/",
-					"node_modules/@sveltejs/kit/types"
-				]
+				pathNot: ["node_modules/@types/", "node_modules/svelte/"]
 			}
 		},
 		{
@@ -228,10 +223,10 @@ module.exports = {
 		},
 
 		// Which modules to exclude
-		// exclude: {
-		// 	// path: an array of regular expressions in strings to match against
-		// 	path: ["node_modules"]
-		// },
+		exclude: {
+			// path: an array of regular expressions in strings to match against
+			path: ["node_modules"]
+		},
 
 		// Which modules to exclusively include (array of regular expressions in strings)
 		// dependency-cruiser will skip everything that doesn't match this pattern
@@ -362,7 +357,7 @@ module.exports = {
 		// See https://github.com/sverweij/dependency-cruiser/blob/main/doc/options-reference.md#skipanalysisnotinrules
 		skipAnalysisNotInRules: true,
 
-		collapse: "node_modules/(?:@[^/]+/[^/]+|[^/]+)",
+		// collapse: "node_modules/(?:@[^/]+/[^/]+|[^/]+)",
 
 		reporterOptions: {
 			dot: {

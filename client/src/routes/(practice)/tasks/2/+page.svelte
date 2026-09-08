@@ -1,6 +1,6 @@
 <script lang="ts">
 	import TextEditor from "$lib/features/text-editor/TextEditor.svelte";
-	import { setTaskContext, type TaskContext } from "$lib/contexts/task-context";
+	import { setTaskContext, type TaskContext } from "$lib/shared/task-context";
 	import ChatPanel from "$lib/features/chat/ChatPanel.svelte";
 	import EvaluationPanel from "$lib/features/evaluation/EvaluationPanel.svelte";
 	import { Lightbulb, Pilcrow } from "@lucide/svelte";

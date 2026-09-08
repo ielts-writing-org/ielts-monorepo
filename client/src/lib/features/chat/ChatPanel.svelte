@@ -1,27 +1,52 @@
 <script lang="ts">
-	import { errorModal } from "$lib/components/ErrorModal.svelte";
-	import { ChatHandler, type ChatContext } from "$lib/features/chat/handler.svelte";
+	import { errorModal } from "$lib/shared/error/ErrorModal.svelte";
 	import { Send } from "@lucide/svelte";
+	import { EventSourceParserStream } from "eventsource-parser/stream";
+	import type { ChatMessage } from "ielts-shared";
 	import { marked } from "marked";
+	import { ChatApi } from "./api";
 
 	type ChatPanelProps = {
 		// TODO: Add evaluations if existed
 		taskContext: { topic: string; response: string };
 	};
-
 	const { taskContext }: ChatPanelProps = $props();
 
 	let chatInput = $state<string>("");
+	let isExecuting = $state(false);
+	let response = $state<string | undefined>();
 
-	const chatHandler = new ChatHandler();
-	chatHandler.onEnd = () => {
-		if (chatHandler.isSuccess && chatHandler.response) {
-			chatContext.push({ role: "assistant", type: "content", content: chatHandler.response });
-		} else if (chatHandler.errorMessage) {
-			errorModal?.setErrorMessage(chatHandler.errorMessage);
+	const api = new ChatApi();
+
+	type ChatContext = ChatMessage[];
+	async function executeChat(chatContext: ChatContext) {
+		try {
+			api.abort();
+
+			isExecuting = true;
+			response = undefined;
+
+			const stream = await api.send(chatContext);
+			const reader = stream.pipeThrough(new EventSourceParserStream()).getReader();
+
+			response = "";
+			while (true) {
+				const { done, value } = await reader.read();
+				if (done || value?.data === "[DONE]") break;
+				const json = JSON.parse(value.data);
+				response += json.choices?.[0]?.delta?.content ?? "";
+			}
+
+			if (response) {
+				chatContext.push({ role: "assistant", type: "content", content: response });
+			}
+		} catch (e) {
+			errorModal?.setErrorMessage(e instanceof Error ? e.message : String(e));
 			errorModal?.showErrorModal();
+		} finally {
+			isExecuting = false;
 		}
-	};
+	}
 
 	const chatContext = $state<ChatContext>([]);
 
@@ -41,7 +66,7 @@
 
 		chatContext.push({ role: "user", type: "content", content: chatInput });
 		chatInput = "";
-		await chatHandler.execute(chatContext);
+		await executeChat(chatContext);
 	};
 </script>
 
@@ -65,11 +90,11 @@
 			</div>
 		{/each}
 	{/if}
-	{#if chatHandler.response && chatHandler.isExecuting}
+	{#if response && isExecuting}
 		<div class="chat-start chat">
 			<div class="chat-header">Assistant</div>
 			<div class="chat-bubble">
-				{@html marked.parse(chatHandler.response)}
+				{@html marked.parse(response)}
 			</div>
 		</div>
 	{/if}
@@ -79,10 +104,7 @@
 	<label class="input join-item flex-1">
 		<input type="text" placeholder="Ask a question..." required bind:value={chatInput} />
 	</label>
-	<button
-		class="btn join-item btn-primary"
-		disabled={chatHandler.isExecuting}
-		onclick={handleChatSubmit}>
+	<button class="btn join-item btn-primary" disabled={isExecuting} onclick={handleChatSubmit}>
 		<span class="hidden sm:inline">Send</span>
 		<Send size="1em" />
 	</button>

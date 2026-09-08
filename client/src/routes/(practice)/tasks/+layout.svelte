@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { resolve } from "$app/paths";
-	import ErrorModal from "$lib/components/ErrorModal.svelte";
-	import ThemeToggle from "$lib/components/ThemeToggle.svelte";
+	import ErrorModal from "$lib/shared/error/ErrorModal.svelte";
+	import ThemeToggle from "$lib/features/theme/ThemeToggle.svelte";
 	import { ArrowLeft } from "@lucide/svelte";
 
 	let { children } = $props();

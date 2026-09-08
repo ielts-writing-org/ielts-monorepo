@@ -1,3 +1,5 @@
+const path = require("node:path");
+
 /** @type {import('dependency-cruiser').IConfiguration} */
 module.exports = {
 	forbidden: [
@@ -27,8 +29,7 @@ module.exports = {
 					"(^|/)[.][^/]+[.](?:js|cjs|mjs|ts|cts|mts|json)$", // dot files
 					"[.]d[.]ts$", // TypeScript declaration files
 					"(^|/)tsconfig[.]json$", // TypeScript config
-					"(^|/)(?:babel|webpack)[.]config[.](?:js|cjs|mjs|ts|cts|mts|json)$", // other configs
-					"hooks[.](server[.])?ts" // custom: svelte hooks
+					"(^|/)(?:babel|webpack)[.]config[.](?:js|cjs|mjs|ts|cts|mts|json)$" // other configs
 				]
 			},
 			to: {}
@@ -87,7 +88,8 @@ module.exports = {
 				"in your package.json.",
 			from: {},
 			to: {
-				dependencyTypes: ["npm-no-pkg", "npm-unknown"]
+				dependencyTypes: ["npm-no-pkg", "npm-unknown"],
+				pathNot: ["node_modules/@sveltejs/kit/types", "node_modules/harper.js/dist"]
 			}
 		},
 		{
@@ -98,9 +100,7 @@ module.exports = {
 			severity: "error",
 			from: {},
 			to: {
-				couldNotResolve: true,
-				// custom: sveltekit virtual types
-				path: ["^\$app(?:/|$)", "^\$env(?:/|$)"]
+				couldNotResolve: true
 			}
 		},
 		{
@@ -151,7 +151,11 @@ module.exports = {
 				// type only dependencies are not a problem as they don't end up in the
 				// production code or are ignored by the runtime.
 				dependencyTypesNot: ["type-only"],
-				pathNot: ["node_modules/@types/", "node_modules/svelte/"]
+				pathNot: [
+					"node_modules/@types/",
+					"node_modules/svelte/",
+					"node_modules/@sveltejs/kit/types"
+				]
 			}
 		},
 		{
@@ -224,14 +228,14 @@ module.exports = {
 		},
 
 		// Which modules to exclude
-		// exclude : {
-		//   // path: an array of regular expressions in strings to match against
-		//   path: '',
+		// exclude: {
+		// 	// path: an array of regular expressions in strings to match against
+		// 	path: ["node_modules"]
 		// },
 
 		// Which modules to exclusively include (array of regular expressions in strings)
 		// dependency-cruiser will skip everything that doesn't match this pattern
-		// includeOnly : [''],
+		includeOnly: ["src"],
 
 		// List of module systems to cruise.
 		// When left out dependency-cruiser will fall back to the list of _all_
@@ -250,7 +254,7 @@ module.exports = {
 		// false: don't look at process.getBuiltinModule calls (the default)
 		// true: dependency-cruiser will detect calls to process.getBuiltinModule/
 		// globalThis.process.getBuiltinModule as imports.
-		detectProcessBuiltinModuleCalls: true,
+		// detectProcessBuiltinModuleCalls: false,
 
 		// prefix for links in html, d2, mermaid and dot/ svg output (e.g. 'https://github.com/you/yourrepo/blob/main/'
 		// to open it on your online repo or `vscode://file/${process.cwd()}/` to
@@ -286,9 +290,9 @@ module.exports = {
 		// The (optional) fileName attribute specifies which file to take (relative to
 		// dependency-cruiser's current working directory). When not provided
 		// defaults to './tsconfig.json'.
-		// tsConfig: {
-		//   fileName: 'tsconfig.json'
-		// },
+		tsConfig: {
+			fileName: "./tsconfig.json"
+		},
 
 		// Webpack configuration to use to get resolve options from.
 		//
@@ -357,6 +361,8 @@ module.exports = {
 		// analysis strictly necessary for checking the rule set only.
 		// See https://github.com/sverweij/dependency-cruiser/blob/main/doc/options-reference.md#skipanalysisnotinrules
 		skipAnalysisNotInRules: true,
+
+		collapse: "node_modules/(?:@[^/]+/[^/]+|[^/]+)",
 
 		reporterOptions: {
 			dot: {

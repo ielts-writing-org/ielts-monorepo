@@ -12,7 +12,6 @@
 		"dep": "npm run dep --workspaces --if-present",
 		"dep:d2": "npm run dep:d2 --workspaces --if-present",
 		"dep:html": "npm run dep:html --workspaces --if-present",
-		"dep:lint": "npm run dep:lint --workspaces --if-present",
 		"lint": "npm run lint --workspaces --if-present",
 		"lint:fix": "npm run lint:fix --workspaces --if-present",
 		"lint:format": "npm run lint:format --workspaces --if-present",

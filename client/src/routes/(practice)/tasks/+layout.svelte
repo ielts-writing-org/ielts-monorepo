@@ -4,7 +4,7 @@
 	import ThemeToggle from "$lib/features/theme/ThemeToggle.svelte";
 	import { ArrowLeft } from "@lucide/svelte";
 
-	let { children } = $props();
+	let { children, data } = $props();
 </script>
 
 <header class="navbar sticky top-0 z-50 mb-2 bg-base-200 shadow">
@@ -21,7 +21,7 @@
 	</div>
 
 	<div class="navbar-end">
-		<ThemeToggle />
+		<ThemeToggle isNightTheme={data.theme === "night"} />
 	</div>
 </header>
 

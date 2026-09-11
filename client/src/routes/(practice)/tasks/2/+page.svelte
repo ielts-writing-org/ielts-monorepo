@@ -1,9 +1,12 @@
 <script lang="ts">
-	import TextEditor from "$lib/features/text-editor/TextEditor.svelte";
 	import { setTaskContext, type TaskContext } from "$lib/shared/task-context";
 	import ChatPanel from "$lib/features/chat/ChatPanel.svelte";
 	import EvaluationPanel from "$lib/features/evaluation/EvaluationPanel.svelte";
 	import { Lightbulb, Pilcrow } from "@lucide/svelte";
+	import { LocalLinter } from "harper.js";
+	import { binary } from "harper.js/binary";
+	import { onMount } from "svelte";
+	import Editor from "$lib/features/harper/harper-editor/Editor.svelte";
 
 	const INITIAL_TASKS: TaskContext = {
 		task_2: {
@@ -15,6 +18,12 @@ First and foremost, engaging in community initiatives exposes adolescents to rea
 	};
 	const taskContext = $state<TaskContext>(INITIAL_TASKS);
 	setTaskContext(taskContext);
+
+	let linter = $state<LocalLinter>();
+
+	onMount(() => {
+		linter = new LocalLinter({ binary });
+	});
 </script>
 
 <svelte:head>
@@ -24,20 +33,25 @@ First and foremost, engaging in community initiatives exposes adolescents to rea
 
 <main class="flex flex-col gap-4 p-2 md:flex-row">
 	<section class="flex flex-1 flex-col gap-4 xl:flex-2">
-		<TextEditor
-			title="Writing task 2 topic"
-			bind:value={taskContext.task_2.topic}
-			enableStatistics={false}>
-			{#snippet icon()}
-				<Lightbulb size="1em" class="inline text-primary" />
-			{/snippet}
-		</TextEditor>
+		<div class="flex flex-col rounded-md border border-base-content/20 bg-base-100">
+			<div class="prose flex max-w-none flex-1 flex-col gap-2 p-2">
+				<div>
+					<Lightbulb size="1em" class="inline text-primary" />
+					<p class="inline font-bold text-primary uppercase">Your response</p>
+				</div>
+			</div>
+			<Editor linter={linter!} bind:content={taskContext.task_2.topic} />
+		</div>
 
-		<TextEditor class="flex-1" title="Essay workspace" bind:value={taskContext.task_2.response}>
-			{#snippet icon()}
-				<Pilcrow size="1em" class="inline align-text-bottom text-primary" />
-			{/snippet}
-		</TextEditor>
+		<div class="flex flex-col rounded-md border border-base-content/20 bg-base-100">
+			<div class="prose flex max-w-none flex-1 flex-col gap-2 p-2">
+				<div>
+					<Pilcrow size="1em" class="inline align-text-bottom text-primary" />
+					<p class="inline font-bold text-primary uppercase">Your response</p>
+				</div>
+			</div>
+			<Editor linter={linter!} bind:content={taskContext.task_2.response} />
+		</div>
 	</section>
 
 	<aside class="sticky top-[10.5%] flex h-[calc(100dvh-6rem)] flex-1 flex-col gap-4 xl:top-[9.5%]">

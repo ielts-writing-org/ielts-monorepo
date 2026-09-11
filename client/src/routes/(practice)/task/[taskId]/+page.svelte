@@ -1,12 +1,14 @@
 <script lang="ts">
-	import { setTaskContext, type TaskContext } from "$lib/shared/task-context";
 	import ChatPanel from "$lib/features/chat/ChatPanel.svelte";
 	import EvaluationPanel from "$lib/features/evaluation/EvaluationPanel.svelte";
+	import Editor from "$lib/features/harper/harper-editor/Editor.svelte";
+	import { setTaskContext, type TaskContext } from "$lib/shared/task-context";
 	import { Lightbulb, Pilcrow } from "@lucide/svelte";
 	import { LocalLinter } from "harper.js";
 	import { binary } from "harper.js/binary";
 	import { onMount } from "svelte";
-	import Editor from "$lib/features/harper/harper-editor/Editor.svelte";
+
+	const { data } = $props();
 
 	const INITIAL_TASKS: TaskContext = {
 		task_2: {
@@ -27,8 +29,8 @@ First and foremost, engaging in community initiatives exposes adolescents to rea
 </script>
 
 <svelte:head>
-	<title>Task 2 | IELTS Writing</title>
-	<meta name="description" content="IELTS Writing Task 2" />
+	<title>Task {data.taskId} | IELTS Writing</title>
+	<meta name="description" content={data.pageTitle} />
 </svelte:head>
 
 <main class="flex flex-col gap-4 p-2 md:flex-row">

@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { goto } from "$app/navigation";
 	import { resolve } from "$app/paths";
 	import { ArrowRight, Check, ChevronRight, Clock3, MessageCircle, Sparkles } from "@lucide/svelte";
 
@@ -61,10 +60,6 @@
 			note: "Accurate simple sentences; watch comma splices."
 		}
 	];
-
-	const gotoTask2 = () => {
-		goto(resolve("/tasks/2"));
-	};
 </script>
 
 <svelte:head>
@@ -86,23 +81,21 @@
 					Est. 40 min
 				</b>
 			</div>
-			<h1 class="my-1.5 text-[16px] font-bold">
-				Task 2 - Opinion Essay: Community Service in High School
-			</h1>
-			<p class="max-w-3xl text-[11px] leading-[1.4] text-[#66738a]">
+			<h1 class="my-1.5 font-bold">Task 2 - Opinion Essay: Community Service in High School</h1>
+			<p class="max-w-3xl text-xs leading-[1.4] text-[#66738a]">
 				“Your recent essays demonstrate strong lexical range (Band 7.0), but your arguments need
 				deeper explanation and concrete examples to reach Band 7.5+ in Task Response.”
 			</p>
 		</div>
 		<button
-			class="inline-flex min-h-9.5 shrink-0 items-center justify-center gap-1 rounded-lg bg-[#5146e8] px-4 text-[11px] font-extrabold text-white">
+			class="inline-flex min-h-9.5 shrink-0 items-center justify-center gap-1 rounded-lg bg-[#5146e8] px-4 text-xs font-extrabold text-white">
 			Practice this task <ArrowRight size={15} strokeWidth={2.5} />
 		</button>
 	</section>
 
 	<div class="my-6 flex flex-col gap-2 sm:flex-row sm:items-baseline sm:justify-between">
 		<h2 class="text-[15px] font-bold">What do you want to practice?</h2>
-		<span class="text-[11px] text-[#79859a]">Select an IELTS Writing format to begin</span>
+		<span class="text-xs text-[#79859a]">Select an IELTS Writing format to begin</span>
 	</div>
 	<section class="grid w-full grid-cols-1 gap-5 xl:grid-cols-[minmax(0,1.55fr)_minmax(320px,1fr)]">
 		<div class="grid grid-cols-1 gap-3.5 md:grid-cols-2">
@@ -152,10 +145,11 @@
 						Multiple Visuals
 					</span>
 				</div>
-				<button
-					class="mt-auto inline-flex min-h-8.5 w-full items-center justify-center rounded-lg border-[1.5px] border-[#5b50fa] bg-white px-3 text-[10px] font-extrabold text-[#574cf0]">
+				<a
+					class="mt-auto inline-flex min-h-8.5 w-full items-center justify-center rounded-lg border-[1.5px] border-[#5b50fa] bg-white px-3 text-[10px] font-extrabold text-[#574cf0]"
+					href={resolve("/task/1")}>
 					Start Task 1 Practice
-				</button>
+				</a>
 			</article>
 			<article
 				class="flex min-h-75 flex-col overflow-hidden rounded-xl border-2 border-[#5a4ffc] bg-white p-3.75">
@@ -195,11 +189,11 @@
 						Two-Part Direct Questions
 					</span>
 				</div>
-				<button
+				<a
 					class="mt-auto inline-flex min-h-8.5 w-full items-center justify-center gap-1 rounded-lg bg-[#5146e8] px-4 text-[10px] font-extrabold text-white"
-					onclick={gotoTask2}>
+					href={resolve("/task/2")}>
 					Start Task 2 Practice <ArrowRight size={15} strokeWidth={2.5} />
-				</button>
+				</a>
 			</article>
 		</div>
 

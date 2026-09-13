@@ -145,11 +145,7 @@
 						Multiple Visuals
 					</span>
 				</div>
-				<a
-					class="mt-auto inline-flex min-h-8.5 w-full items-center justify-center rounded-lg border-[1.5px] border-[#5b50fa] bg-white px-3 text-[10px] font-extrabold text-[#574cf0]"
-					href={resolve("/task/1")}>
-					Start Task 1 Practice
-				</a>
+				<a class="btn mt-auto btn-primary" href={resolve("/task/1")}> Start Task 1 Practice </a>
 			</article>
 			<article
 				class="flex min-h-75 flex-col overflow-hidden rounded-xl border-2 border-[#5a4ffc] bg-white p-3.75">
@@ -189,9 +185,7 @@
 						Two-Part Direct Questions
 					</span>
 				</div>
-				<a
-					class="mt-auto inline-flex min-h-8.5 w-full items-center justify-center gap-1 rounded-lg bg-[#5146e8] px-4 text-[10px] font-extrabold text-white"
-					href={resolve("/task/2")}>
+				<a class="btn mt-auto btn-primary" href={resolve("/task/2")}>
 					Start Task 2 Practice <ArrowRight size={15} strokeWidth={2.5} />
 				</a>
 			</article>

@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { authClient } from "$lib/shared/auth-client";
 
-	const handleLoginWithGitHub = () => {
-		authClient.signIn.social({
+	const handleLoginWithGitHub = async () => {
+		await authClient.signIn.social({
 			provider: "github",
 			callbackURL: window.location.origin
 		});

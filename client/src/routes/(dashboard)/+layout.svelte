@@ -1,7 +1,20 @@
 <script lang="ts">
+	import { invalidateAll } from "$app/navigation";
 	import { resolve } from "$app/paths";
+	import { authClient } from "$lib/shared/auth-client.js";
 
 	let { children, data } = $props();
+
+	const handleLogout = async () => {
+		await authClient.signOut({
+			callbackURL: window.location.origin,
+			fetchOptions: {
+				onSuccess: async () => {
+					await invalidateAll();
+				}
+			}
+		});
+	};
 </script>
 
 <div
@@ -45,18 +58,23 @@
 				AI Tutor
 			</a>
 		</nav>
+
 		<div class="ml-auto flex items-center gap-2 text-[10px] font-bold whitespace-nowrap sm:gap-3">
-			<span class="hidden rounded-2xl border border-[#f5d994] px-2 py-1 text-[#d88400] sm:inline">
-				🔥 5-Day Streak
-			</span>
-			<span class="hidden rounded-2xl bg-[#f0f3f7] px-2.5 py-1.5 text-[#68758a] sm:inline">
-				Target: Band 7.5
-			</span>
-			<img
-				class="grid h-7.5 w-7.5 place-items-center rounded-full"
-				src={data.user?.image}
-				alt={data.user?.name} />
-			<span>{data.user?.name}</span>
+			{#if data.session}
+				<span class="hidden rounded-2xl border border-[#f5d994] px-2 py-1 text-[#d88400] sm:inline">
+					🔥 5-Day Streak
+				</span>
+				<span class="hidden rounded-2xl bg-[#f0f3f7] px-2.5 py-1.5 text-[#68758a] sm:inline">
+					Target: Band 7.5
+				</span>
+
+				<img
+					class="grid h-7.5 w-7.5 place-items-center rounded-full"
+					src={data.user?.image}
+					alt={data.user?.name} />
+				<span>{data.user?.name}</span>
+				<button class="btn btn-link btn-error" onclick={handleLogout}>Logout</button>
+			{/if}
 		</div>
 	</header>
 

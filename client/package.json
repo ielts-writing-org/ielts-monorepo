@@ -23,6 +23,7 @@
 	"dependencies": {
 		"@lucide/svelte": "^1.45.0",
 		"@streamparser/json": "^0.0.26",
+		"better-auth": "^1.7.4",
 		"colorjs.io": "^0.7.1",
 		"eventsource-parser": "^4.1.0",
 		"harper.js": "^2.10.0",

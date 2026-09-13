@@ -6,7 +6,7 @@
 	"scripts": {
 		"check": "tsc --noEmit",
 		"cf-typegen": "wrangler types --env-interface CloudflareBindings",
-		"dev": "wrangler dev",
+		"dev": "wrangler dev --tunnel-name=ielts-writing",
 		"deploy": "wrangler deploy --minify",
 		"dep": "depcruise -c ../.dependency-cruiser.js src",
 		"dep:d2": "depcruise -c ../.dependency-cruiser.js src -T d2 | d2 play -",

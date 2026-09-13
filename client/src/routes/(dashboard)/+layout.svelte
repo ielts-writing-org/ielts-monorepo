@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { resolve } from "$app/paths";
 
-	let { children } = $props();
+	let { children, data } = $props();
 </script>
 
 <div
@@ -52,10 +52,11 @@
 			<span class="hidden rounded-2xl bg-[#f0f3f7] px-2.5 py-1.5 text-[#68758a] sm:inline">
 				Target: Band 7.5
 			</span>
-			<span
-				class="grid h-7.5 w-7.5 place-items-center rounded-full bg-[#5045e8] text-[11px] text-white">
-				PT
-			</span>
+			<img
+				class="grid h-7.5 w-7.5 place-items-center rounded-full"
+				src={data.user?.image}
+				alt={data.user?.name} />
+			<span>{data.user?.name}</span>
 		</div>
 	</header>
 

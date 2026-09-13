@@ -1,29 +1,17 @@
 import { type Span, SuggestionKind } from "harper.js";
-import { domRectToBox, type IgnorableLintBox, isBottomEdgeInBox, shrinkBoxToFit } from "../Box";
-import { getRangeForTextSpan } from "../domUtils";
-import {
-	getCkEditorRoot,
-	getCMRoot,
-	getDraftRoot,
-	getLexicalRoot,
-	getSlateRoot,
-	isFormEl
-} from "../editorUtils";
-import { maybeComputeGoogleDocsLintBoxes } from "../googleDocsAdapter";
-import TextFieldRange from "../TextFieldRange";
+import { domRectToBox, type IgnorableLintBox, isBottomEdgeInBox, shrinkBoxToFit } from "./Box";
+import { getRangeForTextSpan } from "./domUtils";
+import { isFormEl } from "./editorUtils";
+import TextFieldRange from "./TextFieldRange";
 import {
 	applySuggestion,
 	type UnpackedLint,
 	type UnpackedSpan,
 	type UnpackedSuggestion
-} from "../unpackLint";
+} from "./unpackLint";
 
 /**
  * Converts a lint span into one or more on-screen boxes for the active editor.
- *
- * Most editors use the generic DOM/range-based path. Google Docs is delegated to
- * the Google Docs adapter, which handles its mirrored bridge target and editor-specific
- * geometry rules.
  */
 export default function computeLintBoxes(
 	el: HTMLElement,
@@ -31,11 +19,6 @@ export default function computeLintBoxes(
 	rule: string,
 	opts: { ignoreLint?: (hash: string) => Promise<void> }
 ): IgnorableLintBox[] {
-	const googleDocsBoxes = maybeComputeGoogleDocsLintBoxes(el, lint, rule, opts);
-	if (googleDocsBoxes != null) {
-		return googleDocsBoxes;
-	}
-
 	try {
 		let range: Range | TextFieldRange | null = null;
 
@@ -124,14 +107,6 @@ function replaceValue(
 ) {
 	if (isFormEl(el)) {
 		replaceFormElementValue(el as HTMLTextAreaElement | HTMLInputElement, span, replacementText);
-	} else if (getLexicalRoot(el) != null) {
-		replaceLexicalValue(el, span, replacementText);
-	} else if (getDraftRoot(el) != null) {
-		replaceDraftValue(el, span, replacementText);
-	} else if (getCMRoot(el) != null) {
-		replaceCodeMirrorValue(el, span, replacementText);
-	} else if (getSlateRoot(el) != null || getCkEditorRoot(el) != null) {
-		replaceRichTextEditorValue(el, span, replacementText);
 	} else {
 		replaceGenericContentEditable(el, span, replacementText);
 	}
@@ -147,50 +122,6 @@ function replaceFormElementValue(
 	el.focus();
 	el.setSelectionRange(span.start, span.end);
 	document.execCommand("insertText", false, replacementText);
-}
-
-function replaceLexicalValue(
-	el: HTMLElement,
-	span: { start: number; end: number },
-	replacementText: string
-) {
-	const setup = selectSpanInEditor(el, span);
-	if (!setup) return;
-
-	const { doc, sel, range } = setup;
-
-	// Direct DOM replacement
-	replaceTextInRange(doc, sel, range, replacementText);
-
-	// Notify
-	el.dispatchEvent(new InputEvent("input", { bubbles: true, cancelable: false }));
-}
-
-function replaceDraftValue(
-	el: HTMLElement,
-	span: { start: number; end: number },
-	replacementText: string
-) {
-	const setup = selectSpanInEditor(el, span);
-	if (!setup) return;
-
-	const { doc, sel, range } = setup;
-
-	setTimeout(() => {
-		const beforeEvt = new InputEvent("beforeinput", {
-			bubbles: true,
-			cancelable: true,
-			inputType: "insertText",
-			data: replacementText
-		});
-		el.dispatchEvent(beforeEvt);
-
-		if (!beforeEvt.defaultPrevented) {
-			replaceTextInRange(doc, sel, range, replacementText);
-		}
-
-		el.dispatchEvent(new InputEvent("input", { bubbles: true, inputType: "insertText" }));
-	}, 0);
 }
 
 function selectSpanInEditor(el: HTMLElement, span: { start: number; end: number }) {
@@ -212,75 +143,6 @@ function selectSpanInEditor(el: HTMLElement, span: { start: number; end: number 
 	sel.addRange(range);
 
 	return { doc, sel, range };
-}
-
-function replaceRichTextEditorValue(
-	el: HTMLElement,
-	span: { start: number; end: number },
-	replacementText: string
-) {
-	const setup = selectSpanInEditor(el, span);
-	if (!setup) return;
-
-	const { doc, sel, range } = setup;
-
-	const evInit: InputEventInit = {
-		bubbles: true,
-		cancelable: true,
-		inputType: "insertReplacementText",
-		data: replacementText
-	};
-
-	if ("StaticRange" in self) {
-		evInit.targetRanges = [new StaticRange(range)];
-	}
-
-	const beforeEvt = new InputEvent("beforeinput", evInit);
-	el.dispatchEvent(beforeEvt);
-
-	if (!beforeEvt.defaultPrevented) {
-		replaceTextInRange(doc, sel, range, replacementText);
-		el.dispatchEvent(new InputEvent("input", { bubbles: true, cancelable: false }));
-	}
-}
-
-function replaceCodeMirrorValue(
-	el: HTMLElement,
-	span: { start: number; end: number },
-	replacementText: string
-) {
-	const setup = selectSpanInEditor(el, span);
-	if (!setup) return;
-
-	const { doc, sel, range } = setup;
-
-	const evInit: InputEventInit = {
-		bubbles: true,
-		cancelable: true,
-		inputType: "insertReplacementText",
-		data: replacementText
-	};
-
-	if ("StaticRange" in self) {
-		evInit.targetRanges = [new StaticRange(range)];
-	}
-
-	const beforeEvt = new InputEvent("beforeinput", evInit);
-	el.dispatchEvent(beforeEvt);
-
-	// CodeMirror-style editors can handle replacement during beforeinput.
-	// If not handled, fall back to direct DOM replacement.
-	if (!beforeEvt.defaultPrevented) {
-		replaceTextInRange(doc, sel, range, replacementText);
-		el.dispatchEvent(
-			new InputEvent("input", {
-				bubbles: true,
-				cancelable: false,
-				inputType: "insertReplacementText",
-				data: replacementText
-			})
-		);
-	}
 }
 
 function replaceTextInRange(doc: Document, sel: Selection, range: Range, replacementText: string) {

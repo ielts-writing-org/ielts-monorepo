@@ -1,13 +1,9 @@
 <script lang="ts">
+	// import { SquareMenu } from "@lucide/svelte";
 	import type { Lint, Linter } from "harper.js";
-	import {
-		type IgnorableLintBox,
-		LintFramework,
-		type UnpackedLintGroups,
-		unpackLint
-	} from "../lint-framework";
-	import { onMount, tick } from "svelte";
-	import { fade } from "svelte/transition";
+	import type Quill from "quill";
+	import { onDestroy, onMount, tick } from "svelte";
+	// import { fade } from "svelte/transition";
 	import {
 		type EditorFontFamily,
 		type EditorFontSize,
@@ -15,13 +11,17 @@
 		normalizeFontFamily,
 		normalizeFontSize
 	} from "./editorDisplay.js";
-	import LintSidebar from "./LintSidebar.svelte";
+	import {
+		type IgnorableLintBox,
+		LintFramework,
+		type UnpackedLintGroups,
+		unpackLint
+	} from "./lint-framework/index.js";
+	// import LintSidebar from "./LintSidebar.svelte";
 	import StatusBar from "./StatusBar.svelte";
-	import type Quill from "quill";
-	import DelayedRender from "./DelayedRender.svelte";
 
 	/** Who initiated an action on the sidebar. Automated actions can be overwritten by anyone, user actions can only be overwritten by the user. */
-	type SidebarAction = "user" | "automated";
+	// type SidebarAction = "user" | "automated";
 
 	interface Props {
 		content?: string;
@@ -42,7 +42,6 @@
 	}: Props = $props();
 
 	let editor = $state<HTMLDivElement>();
-	let linterVersion = $state(0);
 	let quill = $state<Quill>();
 	let lintBoxes: IgnorableLintBox[] = $state([]);
 	let activeLintId = $state<string | null>(null);
@@ -51,16 +50,12 @@
 	let fontSize = $derived(normalizeFontSize(defaultFontSize));
 	let lastExternalContent = $derived(content);
 	let readySent = $state(false);
-	let sidebarVisible = $state(false);
-	let lastSidebarAction: SidebarAction = "user";
-	let syncTimeout: ReturnType<typeof setTimeout>;
-
-	const sidebarTransitionDuration = 250;
-	const restoreButtonDelay = sidebarTransitionDuration + 40;
+	// let sidebarVisible = $state(false);
+	// let lastSidebarAction: SidebarAction = "user";
 
 	let lfw = $state<LintFramework>();
-	let resizeObserver = $state<ResizeObserver>();
-	let editorContainer: Element | null = $state(null);
+	let mutationObserver = $state<MutationObserver>();
+	let quillTextChangeHandler: (() => void) | null = null;
 
 	onMount(async () => {
 		lfw = new LintFramework(
@@ -100,28 +95,10 @@
 					} catch (e) {
 						console.error("Failed to ignore lint", e);
 					}
-				}
+				},
+				getDelay: () => new Promise((resolve) => resolve(250))
 			}
 		);
-
-		/** Exists to automatically hide the sidebar on smaller screens. */
-		resizeObserver = new ResizeObserver((entries) => {
-			for (let entry of entries) {
-				if (entry.contentBoxSize[0].inlineSize < 640) {
-					hideSidebar("automated");
-				} else {
-					showSidebar("automated");
-				}
-			}
-		});
-
-		//
-		if (editorContainer != null) {
-			resizeObserver.observe(editorContainer);
-		}
-
-		//
-		const version = ++linterVersion;
 
 		lintBoxes = [];
 
@@ -133,21 +110,13 @@
 			console.error("Failed to initialize linter", error);
 		}
 
-		if (version !== linterVersion) {
-			return;
-		}
-
 		if (editor != null) {
-			lfw.update();
-		}
+			// lfw.update();
 
-		//
-		if (editor != null) {
-			let mo = new MutationObserver(updateLintFrameworkElements);
-			mo.observe(editor, { childList: true, subtree: true });
+			mutationObserver = new MutationObserver(updateLintFrameworkElements);
+			mutationObserver.observe(editor, { childList: true, subtree: true });
 			await updateLintFrameworkElements();
 		}
-
 		//
 		if (quill != null && content !== lastExternalContent) {
 			lastExternalContent = content;
@@ -166,8 +135,21 @@
 		}
 	});
 
+	onDestroy(() => {
+		if (quill != null && quillTextChangeHandler != null) {
+			quill.off("text-change", quillTextChangeHandler);
+			quillTextChangeHandler = null;
+		}
+
+		mutationObserver?.disconnect();
+		mutationObserver = undefined;
+
+		lfw?.removeAllEventListeners();
+		lfw = undefined;
+	});
+
 	async function updateLintFrameworkElements() {
-		if (editor == null || !lfw) {
+		if (!editor || !lfw) {
 			return;
 		}
 
@@ -181,10 +163,11 @@
 			quill.root?.setAttribute("data-enable-grammarly", "false");
 			quill.root?.setAttribute("spellcheck", "false");
 			setQuillText(content, false);
-			quill.on("text-change", () => {
+			quillTextChangeHandler = () => {
 				syncDocumentText(true);
 				scheduleLintFrameworkUpdate();
-			});
+			};
+			quill.on("text-change", quillTextChangeHandler);
 		}
 
 		for (let el of editor.getElementsByTagName("p")) {
@@ -192,34 +175,34 @@
 		}
 	}
 
-	function jumpTo(lintBox: IgnorableLintBox) {
-		if (typeof window === "undefined") {
-			return;
-		}
+	// function jumpTo(lintBox: IgnorableLintBox) {
+	// 	if (typeof window === "undefined") {
+	// 		return;
+	// 	}
 
-		activeLintId = lintBox.lint.context_hash;
+	// 	activeLintId = lintBox.lint.context_hash;
 
-		const range = lintBox.range;
-		if (!range) {
-			return;
-		}
+	// 	const range = lintBox.range;
+	// 	if (!range) {
+	// 		return;
+	// 	}
 
-		try {
-			const rect = range.getBoundingClientRect();
+	// 	try {
+	// 		const rect = range.getBoundingClientRect();
 
-			const selection = window.getSelection();
-			if (selection) {
-				selection.removeAllRanges();
-				selection.addRange(range.cloneRange());
-			}
+	// 		const selection = window.getSelection();
+	// 		if (selection) {
+	// 			selection.removeAllRanges();
+	// 			selection.addRange(range.cloneRange());
+	// 		}
 
-			const margin = Math.max(10, window.innerHeight * 0.2);
-			const target = Math.max(0, window.scrollY + rect.top - margin);
-			window.scrollTo({ top: target, behavior: "smooth" });
-		} catch (error) {
-			console.error("Failed to jump to lint", error);
-		}
-	}
+	// 		const margin = Math.max(10, window.innerHeight * 0.2);
+	// 		const target = Math.max(0, window.scrollY + rect.top - margin);
+	// 		window.scrollTo({ top: target, behavior: "smooth" });
+	// 	} catch (error) {
+	// 		console.error("Failed to jump to lint", error);
+	// 	}
+	// }
 
 	// Quill always keeps a trailing document newline; callers expect plain text.
 	function normalizeQuillText(text: string): string {
@@ -269,17 +252,8 @@
 		}
 	}
 
-	// Lint decorations settle across layout frames; the timeout catches slower browser updates.
 	function scheduleLintBoxSync() {
-		requestAnimationFrame(() => {
-			requestAnimationFrame(syncLintBoxes);
-		});
-
-		if (syncTimeout != null) {
-			clearTimeout(syncTimeout);
-		}
-
-		syncTimeout = setTimeout(syncLintBoxes, 150);
+		requestAnimationFrame(syncLintBoxes);
 	}
 
 	// Refresh target elements, ask the framework to lint, then mirror its current boxes.
@@ -293,49 +267,49 @@
 	}
 
 	// Suggestions and ignores mutate the document/lint state outside Quill's text-change path.
-	function handleProblemAction() {
-		syncDocumentText(true);
-		scheduleLintFrameworkUpdate();
-	}
+	// function handleProblemAction() {
+	// 	syncDocumentText(true);
+	// 	scheduleLintFrameworkUpdate();
+	// }
 
-	async function ignoreAllProblems() {
-		syncDocumentText(false);
+	// async function ignoreAllProblems() {
+	// 	syncDocumentText(false);
 
-		const text = documentText;
-		const activeLinter = linter;
-		const groupedLints = await activeLinter.organizedLints(text, { dedup: false });
-		const lints = Object.values(groupedLints).flat();
+	// 	const text = documentText;
+	// 	const activeLinter = linter;
+	// 	const groupedLints = await activeLinter.organizedLints(text, { dedup: false });
+	// 	const lints = Object.values(groupedLints).flat();
 
-		if (lints.length === 0) {
-			return;
-		}
+	// 	if (lints.length === 0) {
+	// 		return;
+	// 	}
 
-		await activeLinter.ignoreLints(text, lints);
-	}
+	// 	await activeLinter.ignoreLints(text, lints);
+	// }
 
-	async function showSidebar(reason: SidebarAction = "automated") {
-		if (lastSidebarAction === "user" && reason === "automated") {
-			return;
-		}
+	// async function showSidebar(reason: SidebarAction = "automated") {
+	// 	if (lastSidebarAction === "user" && reason === "automated") {
+	// 		return;
+	// 	}
 
-		await tick();
-		lastSidebarAction = reason;
+	// 	await tick();
+	// 	lastSidebarAction = reason;
 
-		sidebarVisible = true;
-	}
+	// 	sidebarVisible = true;
+	// }
 
-	function hideSidebar(reason: SidebarAction = "automated"): void {
-		if (lastSidebarAction === "user" && reason === "automated") {
-			return;
-		}
-		lastSidebarAction = reason;
+	// function hideSidebar(reason: SidebarAction = "automated"): void {
+	// 	if (lastSidebarAction === "user" && reason === "automated") {
+	// 		return;
+	// 	}
+	// 	lastSidebarAction = reason;
 
-		if (sidebarVisible === false) {
-			return;
-		}
+	// 	if (sidebarVisible === false) {
+	// 		return;
+	// 	}
 
-		sidebarVisible = false;
-	}
+	// 	sidebarVisible = false;
+	// }
 	let fontStack = $derived(fontStackFor(fontFamily));
 	let editorStyle = $derived(
 		`--harper-editor-font-family: ${fontStack};` +
@@ -345,17 +319,16 @@
 
 <div
 	class="harper-editor @container flex h-full min-h-0 w-full grow-0 basis-full flex-col overflow-hidden rounded-md bg-base-100 text-base-content"
-	style={editorStyle}
-	bind:this={editorContainer}>
+	style={editorStyle}>
 	<div class="flex min-h-0 min-w-0 flex-1">
 		<section class="relative min-w-0 flex-1 bg-base-100" aria-label="Document editor">
 			<div class="h-full overflow-auto px-10 py-4 @max-[760px]:px-6 @max-[760px]:py-4">
-				<div class="mx-auto flex min-h-full max-w-160">
+				<div class="flex min-h-full">
 					<div bind:this={editor} class="flex min-h-full w-full flex-1" spellcheck="false"></div>
 				</div>
 			</div>
 
-			<DelayedRender active={!sidebarVisible} delayMs={restoreButtonDelay}>
+			<!-- {#if !sidebarVisible}
 				<button
 					type="button"
 					class="absolute top-3 right-3 z-20 inline-flex h-8 w-8 items-center justify-center rounded-md border-0 bg-transparent text-stone-600 shadow-none transition-colors duration-150 hover:text-stone-950 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-500"
@@ -363,18 +336,12 @@
 					title="Show problems sidebar"
 					in:fade={{ duration: 120 }}
 					onclick={() => showSidebar("user")}>
-					<svg
-						viewBox="0 0 20 20"
-						aria-hidden="true"
-						class="h-4.5 w-4.5 fill-none stroke-current stroke-[1.5] [stroke-linecap:round] [stroke-linejoin:round]">
-						<rect x="3.5" y="3" width="13" height="14" rx="3" />
-						<path d="M12.5 3v14" />
-					</svg>
+					<SquareMenu class="h-4.5 w-4.5 fill-none stroke-current stroke-[1.5]" />
 				</button>
-			</DelayedRender>
+			{/if} -->
 		</section>
 
-		{#if sidebarVisible}
+		<!-- {#if sidebarVisible}
 			<LintSidebar
 				{lintBoxes}
 				{activeLintId}
@@ -385,7 +352,7 @@
 				onIgnored={handleProblemAction}
 				onIgnoreAll={ignoreAllProblems}
 				onHideSidebar={() => hideSidebar("user")} />
-		{/if}
+		{/if} -->
 	</div>
 
 	<StatusBar

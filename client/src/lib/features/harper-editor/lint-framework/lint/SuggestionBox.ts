@@ -1,13 +1,10 @@
-/** biome-ignore-all lint/complexity/useArrowFunction: It cannot be an arrow function for the logic to work. */
 import { SuggestionKind } from "harper.js";
 import type { VNode } from "virtual-dom";
 import h from "virtual-dom/h";
-import bookDownSvg from "../assets/bookDownSvg";
 import type { IgnorableLintBox, LintBox } from "./Box";
 import { type LintKind, lintKindColor, lintKindTextColor } from "./lintKindColor";
-// Decoupled: actions passed in by framework consumer
+import { BookDown, SlidersVertical, SquareOff } from "@lucide/svelte";
 import type { UnpackedLint, UnpackedSuggestion } from "./unpackLint";
-import { SlidersVertical, SquareOff } from "@lucide/svelte";
 
 /** Saved cursor restore function, captured when the popup steals focus. */
 let savedRestore: (() => void) | null = null;
@@ -57,49 +54,43 @@ function restoreCursorState() {
 	}, 0);
 }
 
-const FocusHook = function () {};
-// eslint-disable-next-line
-FocusHook.prototype.hook = function (node: any) {
-	if (node.__harperAutofocused) {
-		return;
-	}
-
-	requestAnimationFrame(() => {
-		saveCursorState();
-
-		node.focus();
-		Object.defineProperty(node, "__harperAutofocused", {
-			value: true,
-			enumerable: false,
-			configurable: false
-		});
-	});
-};
-
-const CloseOnEscapeHook = function (this: any, onClose: () => void) {
-	this.onClose = onClose;
-};
-
-CloseOnEscapeHook.prototype.hook = function (this: { onClose: () => void }, node: HTMLElement) {
-	const handler = (e: KeyboardEvent) => {
-		if (e.key === "Escape") {
-			this.onClose();
+const createFocusHook = () => ({
+	hook: (node: any) => {
+		if (node.__harperAutofocused) {
+			return;
 		}
-	};
-	window.addEventListener("keydown", handler);
-	// eslint-disable-next-line
-	(node as any).__harperCloseOnEscapeHandler = handler;
-};
 
-CloseOnEscapeHook.prototype.unhook = function (this: any, node: HTMLElement) {
-	// eslint-disable-next-line
-	const handler = (node as any).__harperCloseOnEscapeHandler;
-	if (handler) {
-		window.removeEventListener("keydown", handler);
-		// eslint-disable-next-line
-		delete (node as any).__harperCloseOnEscapeHandler;
+		requestAnimationFrame(() => {
+			saveCursorState();
+
+			node.focus();
+			Object.defineProperty(node, "__harperAutofocused", {
+				value: true,
+				enumerable: false,
+				configurable: false
+			});
+		});
 	}
-};
+});
+
+const createCloseOnEscapeHook = (onClose: () => void) => ({
+	hook: (node: HTMLElement) => {
+		const handler = (e: KeyboardEvent) => {
+			if (e.key === "Escape") {
+				onClose();
+			}
+		};
+		window.addEventListener("keydown", handler);
+		(node as any).__harperCloseOnEscapeHandler = handler;
+	},
+	unhook: (node: HTMLElement) => {
+		const handler = (node as any).__harperCloseOnEscapeHandler;
+		if (handler) {
+			window.removeEventListener("keydown", handler);
+			delete (node as any).__harperCloseOnEscapeHandler;
+		}
+	}
+});
 
 function header(
 	title: string,
@@ -199,7 +190,7 @@ function button(
 	);
 }
 
-function footer(leftChildren: any, rightChildren: any) {
+function footer(leftChildren: VNode[], rightChildren: VNode[]) {
 	const left = h("div", { className: "harper-child-cont" }, leftChildren);
 	const right = h("div", { className: "harper-child-cont" }, rightChildren);
 	return h("div", { className: "harper-footer" }, [left, right]);
@@ -228,7 +219,7 @@ function addToDictionary(box: LintBox, addToUserDictionary?: (words: string[]) =
 			},
 			title: "Add word to user dictionary",
 			"aria-label": "Add word to user dictionary",
-			innerHTML: bookDownSvg
+			innerHTML: BookDown
 		},
 		[]
 	);
@@ -243,7 +234,7 @@ function suggestions(
 		const label =
 			s.replacement_text !== "" ? s.replacement_text : String(suggestionKindToLabel(s.kind));
 		const desc = `Replace with "${label}"`;
-		const props = i === 0 ? { hook: new FocusHook() } : {};
+		const props = i === 0 ? { hook: Object.create(createFocusHook()) } : {};
 		return button(
 			label,
 			{ background: lintKindColor(lintKind), color: lintKindTextColor(lintKind) },
@@ -265,11 +256,7 @@ function suggestionKindToLabel(s: SuggestionKind): string {
 	}
 }
 
-function reportProblemButton(reportError?: () => Promise<void>) {
-	if (!reportError) {
-		return undefined;
-	}
-
+function reportProblemButton(reportError: () => Promise<void>) {
 	return h(
 		"button",
 		{
@@ -520,41 +507,54 @@ export default function SuggestionBox(
 		close();
 	};
 
+	const footerChildren: Array<VNode> = [];
+
+	if (box.lint.lint_kind === "Spelling" && actions.addToUserDictionary) {
+		footerChildren.push(addToDictionary(box, actions.addToUserDictionary));
+	}
+
+	if (ignoreLintCallback) {
+		footerChildren.push(ignoreLint(() => ignoreLintCallback().then(refocusClose)));
+	}
+
+	const children: Array<VNode> = [
+		styleTag(box.lint.lint_kind),
+		header(
+			box.lint.lint_kind_pretty,
+			lintKindColor(box.lint.lint_kind),
+			refocusClose,
+			actions.openOptions,
+			box.rule,
+			actions.setRuleEnabled
+		),
+		body(box.lint.message_html),
+		footer(
+			suggestions(box.lint.lint_kind, box.lint.suggestions, (v) => {
+				Promise.resolve(box.applySuggestion(v)).finally(() => {
+					close();
+				});
+			}),
+			footerChildren
+		)
+	];
+
+	const hintDrawerNode = hintDrawer(hint);
+	if (hintDrawerNode) {
+		children.push(hintDrawerNode);
+	}
+
+	const reportError = actions.reportError;
+	if (reportError) {
+		children.push(reportProblemButton(() => reportError(box.lint, box.rule)));
+	}
+
 	return h(
 		"div",
 		{
 			className: "harper-container fade-in",
 			style: positionStyle,
-			"harper-close-on-escae": new CloseOnEscapeHook(refocusClose)
+			"harper-close-on-escape": Object.create(createCloseOnEscapeHook(refocusClose))
 		},
-		[
-			styleTag(box.lint.lint_kind),
-			header(
-				box.lint.lint_kind_pretty,
-				lintKindColor(box.lint.lint_kind),
-				refocusClose,
-				actions.openOptions,
-				box.rule,
-				actions.setRuleEnabled
-			),
-			body(box.lint.message_html),
-			footer(
-				suggestions(box.lint.lint_kind, box.lint.suggestions, (v) => {
-					Promise.resolve(box.applySuggestion(v)).finally(() => {
-						close();
-					});
-				}),
-				[
-					box.lint.lint_kind === "Spelling" && actions.addToUserDictionary
-						? addToDictionary(box, actions.addToUserDictionary)
-						: undefined,
-					ignoreLintCallback ? ignoreLint(() => ignoreLintCallback().then(refocusClose)) : undefined
-				]
-			),
-			hintDrawer(hint),
-			actions.reportError
-				? reportProblemButton(() => actions.reportError!(box.lint, box.rule))
-				: undefined
-		]
+		children
 	);
 }

@@ -7,7 +7,7 @@ export type {
 	UnpackedLint,
 	UnpackedSpan,
 	UnpackedSuggestion
-} from "../lint-framework";
+} from "./lint-framework";
 
 export type SourceTextNode = {
 	textContent: string | null;

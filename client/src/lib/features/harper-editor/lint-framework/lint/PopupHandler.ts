@@ -179,4 +179,19 @@ export default class PopupHandler {
 
 		this.render();
 	}
+
+	/** Remove all event listeners and dispose of the render box. */
+	public destroy() {
+		this.currentLintBoxes.forEach((b) => {
+			b.source.removeEventListener("pointerdown", this.pointerDownCallback as EventListener);
+		});
+		this.currentLintBoxes = [];
+
+		if (this.activationKeyListener) {
+			this.activationKeyListener();
+			this.activationKeyListener = undefined;
+		}
+
+		this.renderBox.remove();
+	}
 }

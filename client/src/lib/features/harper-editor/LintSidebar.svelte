@@ -1,10 +1,11 @@
 <script lang="ts">
+	import { ChevronDown, EllipsisVertical, SquareMenu } from "@lucide/svelte";
+	import { onMount } from "svelte";
 	import { cubicOut } from "svelte/easing";
 	import { fade, fly } from "svelte/transition";
 	import { createEmptyLintKindCounts, LINT_KIND_STYLE_ENTRIES } from "./editorDisplay.js";
 	import LintCard from "./LintCard.svelte";
 	import type { IgnorableLintBox, LintBox } from "./types.js";
-	import { onMount } from "svelte";
 
 	interface Props {
 		lintBoxes?: IgnorableLintBox[];
@@ -34,13 +35,6 @@
 	let showLintKindCounts = $state(true);
 	let menuOpen = $state(false);
 	let showIgnoreConfirm = $state(false);
-
-	const iconButtonClass =
-		"inline-flex h-7 w-7 items-center justify-center rounded-md border-0 bg-transparent text-stone-600 shadow-none transition-colors duration-150 hover:text-stone-950 disabled:opacity-50";
-	const menuItemClass =
-		"m-0 flex h-8 w-full items-center border-0 bg-transparent px-3 text-left text-[13px] font-medium text-stone-700 shadow-none hover:bg-stone-100 disabled:text-stone-300 disabled:hover:bg-transparent";
-	const dangerMenuItemClass =
-		"m-0 flex h-8 w-full items-center border-0 bg-transparent px-3 text-left text-[13px] font-medium text-red-700 shadow-none hover:bg-red-50 disabled:text-stone-300 disabled:hover:bg-transparent";
 
 	let allOpen = $derived(lintBoxes.length > 0 && openSet.size === lintBoxes.length);
 	let problemCountLabel = $derived(
@@ -208,12 +202,7 @@
 						class={`inline-flex shrink-0 text-base-content transition-transform duration-150 ${
 							showLintKindCounts ? "rotate-180" : ""
 						}`}>
-						<svg
-							viewBox="0 0 16 16"
-							aria-hidden="true"
-							class="h-3.5 w-3.5 fill-none stroke-current stroke-[1.6] [stroke-linecap:round] [stroke-linejoin:round]">
-							<path d="M4 6 8 10 12 6" />
-						</svg>
+						<ChevronDown class="h-3.5 w-3.5 fill-none stroke-current stroke-[1.6]" />
 					</span>
 				</button>
 			</h2>
@@ -221,32 +210,22 @@
 			<div bind:this={menuRoot} class="relative flex shrink-0 items-center gap-1.5">
 				<button
 					type="button"
-					class={iconButtonClass}
+					class="inline-flex h-7 w-7 items-center justify-center rounded-md border-0 bg-transparent text-stone-600 shadow-none transition-colors duration-150 hover:text-stone-950 disabled:opacity-50"
 					aria-label="Hide problems sidebar"
 					title="Hide problems sidebar"
 					onclick={hideSidebar}>
-					<svg
-						viewBox="0 0 20 20"
-						aria-hidden="true"
-						class="h-4.5 w-4.5 fill-none stroke-current stroke-[1.5] [stroke-linecap:round] [stroke-linejoin:round]">
-						<rect x="3.5" y="3" width="13" height="14" rx="3" />
-						<path d="M13.25 5.5v9" />
-					</svg>
+					<SquareMenu class="h-4.5 w-4.5 fill-none stroke-current stroke-[1.5]" />
 				</button>
 
 				<button
 					type="button"
-					class={iconButtonClass}
+					class="inline-flex h-7 w-7 items-center justify-center rounded-md border-0 bg-transparent text-stone-600 shadow-none transition-colors duration-150 hover:text-stone-950 disabled:opacity-50"
 					aria-label="More problem actions"
 					aria-haspopup="menu"
 					aria-expanded={menuOpen}
 					title="More problem actions"
 					onclick={() => (menuOpen = !menuOpen)}>
-					<svg viewBox="0 0 16 16" aria-hidden="true" class="h-4 w-4 fill-current">
-						<circle cx="8" cy="4" r="1.15" />
-						<circle cx="8" cy="8" r="1.15" />
-						<circle cx="8" cy="12" r="1.15" />
-					</svg>
+					<EllipsisVertical class="h-4 w-4 fill-current" />
 				</button>
 
 				{#if menuOpen}
@@ -258,7 +237,7 @@
 						<button
 							type="button"
 							role="menuitem"
-							class={menuItemClass}
+							class="m-0 flex h-8 w-full items-center border-0 bg-transparent px-3 text-left text-[13px] font-medium text-stone-700 shadow-none hover:bg-stone-100 disabled:text-stone-300 disabled:hover:bg-transparent"
 							disabled={lintBoxes.length === 0 || allOpen}
 							onclick={openAllCards}>
 							Open All
@@ -266,7 +245,7 @@
 						<button
 							type="button"
 							role="menuitem"
-							class={menuItemClass}
+							class="m-0 flex h-8 w-full items-center border-0 bg-transparent px-3 text-left text-[13px] font-medium text-stone-700 shadow-none hover:bg-stone-100 disabled:text-stone-300 disabled:hover:bg-transparent"
 							disabled={lintBoxes.length === 0 || openSet.size === 0}
 							onclick={closeAllCards}>
 							Close All
@@ -275,7 +254,7 @@
 						<button
 							type="button"
 							role="menuitem"
-							class={dangerMenuItemClass}
+							class="m-0 flex h-8 w-full items-center border-0 bg-transparent px-3 text-left text-[13px] font-medium text-red-700 shadow-none hover:bg-red-50 disabled:text-stone-300 disabled:hover:bg-transparent"
 							disabled={lintBoxes.length === 0}
 							onclick={requestIgnoreAll}>
 							Ignore All
@@ -312,11 +291,7 @@
 					<div
 						aria-hidden="true"
 						class="mb-2.5 inline-flex h-8 w-8 items-center justify-center rounded-lg bg-linear-to-b from-emerald-400 to-emerald-600 text-white shadow-sm shadow-emerald-900/20">
-						<svg
-							viewBox="0 0 16 16"
-							class="h-4 w-4 fill-none stroke-current stroke-[1.6] [stroke-linecap:round] [stroke-linejoin:round]">
-							<path d="M3.5 8.5 6.5 11.5 12.5 5" />
-						</svg>
+						<ChevronDown class="h-4 w-4 fill-none stroke-current stroke-[1.6]" />
 					</div>
 					<strong class="mb-0.5 block font-semibold text-base-content">All clear</strong>
 					<p class="m-0">Harper has no suggestions for this document.</p>
@@ -365,15 +340,12 @@
 				This will ignore {problemCountLabel} in the current document.
 			</p>
 			<div class="flex justify-end gap-2">
-				<button
-					type="button"
-					class="h-8 rounded-md border-[0.5px] border-stone-300 bg-linear-to-b from-white to-stone-50 px-3 text-[13px] font-medium text-stone-700 shadow-sm shadow-stone-950/5"
-					onclick={cancelIgnoreAll}>
+				<button type="button" class="btn btn-ghost disabled:opacity-50" onclick={cancelIgnoreAll}>
 					Cancel
 				</button>
 				<button
 					type="button"
-					class="h-8 rounded-md border-[0.5px] border-red-700 bg-red-700 px-3 text-[13px] font-medium text-white shadow-sm shadow-red-950/10 disabled:opacity-50"
+					class="btn btn-outline btn-error disabled:opacity-50"
 					disabled={lintBoxes.length === 0}
 					onclick={confirmIgnoreAll}>
 					Ignore All
@@ -382,10 +354,3 @@
 		</div>
 	</div>
 {/if}
-
-<style>
-	aside :global(code) {
-		font-family: inherit;
-		font-size: inherit;
-	}
-</style>

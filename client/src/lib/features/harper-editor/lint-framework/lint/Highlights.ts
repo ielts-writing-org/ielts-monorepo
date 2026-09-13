@@ -1,51 +1,35 @@
 import type { VNode } from "virtual-dom";
 import h from "virtual-dom/h";
 import type { LintBox } from "./Box";
-import {
-	getCMRoot,
-	getDraftRoot,
-	getGhostRoot,
-	getGutenbergRoot,
-	getLexicalRoot,
-	getMediumRoot,
-	getNotionRoot,
-	getP2Root,
-	getPMRoot,
-	getQuillJsRoot,
-	getShredditComposerRoot,
-	getSlateRoot,
-	getTrixRoot
-} from "./editorUtils";
-import {
-	applyGoogleDocsRenderHostStyle,
-	getGoogleDocsRenderOffset,
-	getGoogleDocsRenderTarget,
-	isGoogleDocsSource,
-	isGoogleDocsSourceSyncing
-} from "./googleDocsAdapter";
+import { getQuillJsRoot } from "./editorUtils";
 import { type LintKind, lintKindColor } from "./lintKindColor";
 import RenderBox from "./RenderBox";
 import type { SourceElement } from "./SourceElement";
 import type { UnpackedLint } from "./unpackLint";
 
-/** A class that renders highlights to a page and nothing else. Uses a virtual DOM to minimize jitter. */
+/** A class that renders highlights to a page and nothing else. Uses a virtual DOM to minimize jitter. Require CSS Highlights API*/
 export default class Highlights {
 	renderBoxes: Map<SourceElement, RenderBox>;
-	highlights: Map<LintKind, Highlight> | null;
+	highlights: Map<LintKind, Highlight>;
+	private styleIds: Set<string>;
 
 	constructor() {
 		this.renderBoxes = new Map();
-		this.highlights = supportsCustomHighlights() ? new Map() : null;
+		this.highlights = new Map();
+		this.styleIds = new Set();
 	}
 
 	/** Used for CSS highlight API */
 	private insertHighlightStyle(tag: string, lint: UnpackedLint) {
+		const styleId = `harper-highlight-style-${lint.lint_kind}`;
+		if (document.getElementById(styleId)) {
+			this.styleIds.add(styleId);
+			return;
+		}
+
 		const color = lintKindColor(lint.lint_kind);
 		const textDecor = `underline ${color} solid 2px`;
 		const backgroundColor = `${color}22`;
-
-		const styleId = `harper-highlight-style-${lint.lint_kind}`;
-		if (document.getElementById(styleId)) return;
 
 		const style = document.createElement("style");
 		style.id = styleId;
@@ -56,6 +40,7 @@ export default class Highlights {
       }
     `;
 		document.head.appendChild(style);
+		this.styleIds.add(styleId);
 	}
 
 	public renderLintBoxes(boxes: LintBox[]) {
@@ -64,16 +49,21 @@ export default class Highlights {
 
 		// Clear old highlights if they exist
 		if (this.highlights) {
-			for (const [, highlight] of this.highlights) {
+			for (const [lintKind, highlight] of this.highlights) {
 				highlight.clear();
+				CSS.highlights.delete(`harper-${lintKind}`);
 			}
 		}
 
 		for (const box of boxes) {
-			if (box.range && this.highlights != null) {
+			if (box.range) {
 				let highlight = this.highlights.get(box.lint.lint_kind);
 
 				if (highlight != null) {
+					const tag = `harper-${box.lint.lint_kind}`;
+					if (!CSS.highlights.has(tag)) {
+						CSS.highlights.set(tag, highlight);
+					}
 					highlight.add(box.range);
 				} else {
 					highlight = new Highlight();
@@ -115,20 +105,12 @@ export default class Highlights {
 		const updated = new Set();
 
 		for (const [source, { boxes, cpa }] of sourceToBoxes.entries()) {
-			if (isGoogleDocsSourceSyncing(source)) {
-				updated.add(source);
-				continue;
-			}
-
 			const renderBox = this.renderBoxes.get(source)!;
 
 			const host = renderBox.getShadowHost();
 			host.id = "harper-highlight-host";
-			const isGoogleDocs = isGoogleDocsSource(source);
 
-			if (applyGoogleDocsRenderHostStyle(host, source)) {
-				// The Google Docs adapter owns the host positioning details.
-			} else if (cpa != null) {
+			if (cpa != null) {
 				const hostStyle = host.style;
 
 				hostStyle.position = "absolute";
@@ -144,20 +126,14 @@ export default class Highlights {
 				host.removeAttribute("style");
 			}
 
-			const googleDocsRenderOffset = getGoogleDocsRenderOffset(source);
-			const offset =
-				googleDocsRenderOffset ?? (isGoogleDocs || cpa == null ? null : { x: cpa.x, y: cpa.y });
-			const boxPosition: "absolute" | "fixed" = isGoogleDocs ? "absolute" : "fixed";
+			const offset = cpa == null ? null : { x: cpa.x, y: cpa.y };
 
-			renderBox.render(this.renderTree(boxes, offset, boxPosition));
+			renderBox.render(this.renderTree(boxes, offset));
 			updated.add(source);
 		}
 
 		for (const [source, box] of this.renderBoxes.entries()) {
 			if (!updated.has(source)) {
-				if (isGoogleDocsSourceSyncing(source)) {
-					continue;
-				}
 				box.render(h("div", {}, []));
 			}
 		}
@@ -175,11 +151,28 @@ export default class Highlights {
 		}
 	}
 
-	private renderTree(
-		boxes: LintBox[],
-		offset: { x: number; y: number } | null,
-		boxPosition: "absolute" | "fixed"
-	): VNode {
+	/** Remove all highlights, render boxes, and style elements from the page. */
+	public destroy() {
+		for (const [, box] of this.renderBoxes) {
+			box.remove();
+		}
+		this.renderBoxes.clear();
+
+		if (this.highlights) {
+			for (const [lintKind, highlight] of this.highlights) {
+				highlight.clear();
+				CSS.highlights.delete(`harper-${lintKind}`);
+			}
+			this.highlights.clear();
+		}
+
+		for (const styleId of this.styleIds) {
+			document.getElementById(styleId)?.remove();
+		}
+		this.styleIds.clear();
+	}
+
+	private renderTree(boxes: LintBox[], offset: { x: number; y: number } | null): VNode {
 		const elements = [];
 		const offsetX = offset?.x ?? 0;
 		const offsetY = offset?.y ?? 0;
@@ -187,19 +180,12 @@ export default class Highlights {
 		for (const box of boxes) {
 			const x = box.x - offsetX;
 			const y = box.y - offsetY;
-			const positionStyle =
-				boxPosition === "fixed"
-					? {
-							position: "fixed",
-							left: "0px",
-							top: "0px",
-							transform: `translate(${x}px, ${y}px)`
-						}
-					: {
-							position: "absolute",
-							left: `${x}px`,
-							top: `${y}px`
-						};
+			const positionStyle = {
+				position: "fixed",
+				left: "0px",
+				top: "0px",
+				transform: `translate(${x}px, ${y}px)`
+			};
 
 			const boxEl = h(
 				"div",
@@ -226,30 +212,11 @@ export default class Highlights {
 	/** Determines which target the render boxes should be attached to.
 	 * Depends on text editor. */
 	private computeRenderTarget(el: SourceElement): HTMLElement {
-		const googleDocsRenderTarget = getGoogleDocsRenderTarget(el);
-		if (googleDocsRenderTarget != null) {
-			return googleDocsRenderTarget;
-		}
-
 		if (el.parentElement?.classList.contains("ProseMirror")) {
 			return el.parentElement.parentElement!;
 		}
 
-		const queries = [
-			getQuillJsRoot,
-			getNotionRoot,
-			getGhostRoot,
-			getDraftRoot,
-			getPMRoot,
-			getCMRoot,
-			getSlateRoot,
-			getMediumRoot,
-			getShredditComposerRoot,
-			getLexicalRoot,
-			getP2Root,
-			getGutenbergRoot,
-			getTrixRoot
-		];
+		const queries = [getQuillJsRoot];
 
 		for (const query of queries) {
 			const root = query(el);
@@ -331,37 +298,4 @@ function isContainingBlock(el: Element): boolean {
 	}
 
 	return false;
-}
-
-export function supportsCustomHighlights() {
-	const root = globalThis.document?.documentElement;
-	const disableFlag =
-		root?.getAttribute?.("data-harper-disable-css-highlights") === "true" ||
-		root?.dataset?.harperDisableCssHighlights === "true";
-	if (disableFlag) {
-		return false;
-	}
-	const isAutomated = globalThis.navigator?.webdriver === true;
-	if (isAutomated) {
-		return false;
-	}
-	if (!("CSS" in window) || typeof CSS.supports !== "function") return false;
-	const supportsSelector = CSS.supports("selector(::highlight(__x))");
-	const reg = CSS?.highlights;
-	const hasRegistry =
-		!!reg &&
-		["get", "set", "has", "delete", "clear"].every((m) => typeof reg.get(m) === "function");
-	const hasCtor = typeof window.Highlight === "function";
-	let canRegister = false;
-	if (hasRegistry && hasCtor) {
-		try {
-			const h = new Highlight();
-			CSS.highlights.set("__probe__", h);
-			canRegister = CSS.highlights.has("__probe__");
-			CSS.highlights.delete("__probe__");
-		} catch {
-			/* empty */
-		}
-	}
-	return supportsSelector && hasRegistry && hasCtor && canRegister;
 }

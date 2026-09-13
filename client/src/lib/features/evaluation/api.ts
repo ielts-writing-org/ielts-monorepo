@@ -10,7 +10,7 @@ export class EvaluationApi {
 
 		const validRequest = z.parse(task2EvaluationRequestSchema, request);
 
-		const response = await fetch(env.PUBLIC_API_URL + "/task2/evaluate", {
+		const response = await fetch(env.PUBLIC_SERVER_URL + "/api/task2/evaluate", {
 			method: "POST",
 			headers: { "Content-Type": "application/json" },
 			body: JSON.stringify(validRequest),

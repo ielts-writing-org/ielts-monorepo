@@ -10,7 +10,7 @@ export class ChatApi {
 
 		const validRequest = z.parse(chatRequestSchema, request);
 
-		const response = await fetch(env.PUBLIC_API_URL + "/task2/chat", {
+		const response = await fetch(env.PUBLIC_SERVER_URL + "/api/task2/chat", {
 			method: "POST",
 			headers: { "Content-Type": "application/json" },
 			body: JSON.stringify(validRequest),

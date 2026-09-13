@@ -16,7 +16,7 @@ In conclusion, the platform aims to make writing practice more interactive, resp
 ## How to run the local development server
 
 1. Clone this repo.
-2. Run the following command to install required libraries:
+2. Run the following command at the root to install required libraries for all packages:
 
    ```bash
    npm install
@@ -30,15 +30,26 @@ In conclusion, the platform aims to make writing practice more interactive, resp
 
 4. Follow each terminal's returns to continue.
 
+## Server environment variables
+
+| Variable             | Value                   |
+| -------------------- | ----------------------- |
+| BETTER_AUTH_URL      | <http://localhost:8787> |
+| BETTER_AUTH_SECRET   |                         |
+| BETTER_AUTH_API_KEY  |                         |
+| GITHUB_CLIENT_ID     |                         |
+| GITHUB_CLIENT_SECRET |                         |
+
 ## Client environment variables
 
-| VARIABLE       | VALUE                       |
-| -------------- | --------------------------- |
-| PUBLIC_API_URL | <http://localhost:8787/api> |
+| Variable               | Value                   |
+| ---------------------- | ----------------------- |
+| PUBLIC_SERVER_URL      | <http://localhost:8787> |
+| PUBLIC_BETTER_AUTH_URL | ${PUBLIC_SERVER_URL}    |
 
 ## Server KV entries
 
-| NAMESPACE | KEY               | DESCRIPTION                                                |
+| Namespace | Key               | Description                                                |
 | --------- | ----------------- | ---------------------------------------------------------- |
 | TASK2_KV  | chat-prompt       | The chat prompt to use when chat with AI                   |
 | TASK2_KV  | evaluation-prompt | The evaluation prompt to use when evaluate with AI         |
@@ -51,9 +62,10 @@ Base:
 - <http://localhost:8787>
 - <http://127.0.0.1:8787>
 
-| No  | Endpoint | Description          |
-| --- | -------- | -------------------- |
-| 1   | /        | Application's health |
-| 2   | /api     | API Routes           |
-| 3   | /openapi | OpenAPI docs (JSON)  |
-| 4   | /scalar  | ScalarUI             |
+| No  | Endpoint | Method | Description                      | Dev? |
+| --- | -------- | ------ | -------------------------------- | :--: |
+| 1   | /        | Any    | Application's health             |      |
+| 2   | /api     | Any    | API Routes (BetterAuth included) |      |
+| 3   | /openapi | GET    | OpenAPI docs (JSON)              |  x   |
+| 4   | /scalar  | GET    | ScalarUI                         |  x   |
+| 4   | /migrate | POST   | Migrate database                 |  x   |

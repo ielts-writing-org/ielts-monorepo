@@ -1,5 +1,6 @@
 import { dash } from "@better-auth/infra";
 import { betterAuth } from "better-auth";
+import { admin } from "better-auth/plugins";
 import { env } from "cloudflare:workers";
 
 export const auth = betterAuth({
@@ -11,5 +12,10 @@ export const auth = betterAuth({
 		}
 	},
 	trustedOrigins: ["http://localhost:5173"],
-	plugins: [dash()]
+	plugins: [admin(), dash()],
+	advanced: {
+		database: {
+			validateSchema: false
+		}
+	}
 });

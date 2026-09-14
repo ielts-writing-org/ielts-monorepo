@@ -6,7 +6,7 @@
 		night --prefersdark;
 	logs: false;
 }
-@custom-variant dark (&:where(.dark, .dark *));
+@custom-variant dark (&:where([data-theme=night], [data-theme=night] *));
 
 * {
 	@apply scrollbar-thin;

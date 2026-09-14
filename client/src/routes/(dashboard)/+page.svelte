@@ -63,7 +63,7 @@
 </script>
 
 <svelte:head>
-	<title>LexisWriting | Practice</title>
+	<title>Dashboard | IELTS Writing</title>
 	<meta name="description" content="IELTS Writing practice dashboard" />
 </svelte:head>
 
@@ -100,12 +100,9 @@
 	<section class="grid w-full grid-cols-1 gap-5 xl:grid-cols-[minmax(0,1.55fr)_minmax(320px,1fr)]">
 		<div class="grid grid-cols-1 gap-3.5 md:grid-cols-2">
 			<article
-				class="flex min-h-75 flex-col overflow-hidden rounded-xl border border-[#e1e6ef] bg-white p-4">
-				<div
-					class="flex justify-between gap-1.5 text-[8px] font-bold whitespace-nowrap text-[#6f7e93]">
-					<span class="rounded bg-[#f0f2ff] px-1.5 py-1 text-[#5861eb]">
-						TASK 1 <b>• 33% SCORE WEIGHT</b>
-					</span>
+				class="flex min-h-75 flex-col overflow-hidden rounded-xl border border-base-100 bg-base-100 p-4 hover:border-primary">
+				<div class="flex justify-between gap-1.5 text-xs font-bold text-[#6f7e93]">
+					<span class="rounded bg-[#f0f2ff] px-1.5 py-1 text-primary"> TASK 1 </span>
 					<span class="flex items-center gap-1">
 						<Clock3 size={12} /> 20 mins • min 150 words
 					</span>
@@ -116,44 +113,21 @@
 				</p>
 				<strong class="mb-1 text-[9px] text-[#7a879b]">Supported Visual Types:</strong>
 				<div class="flex flex-wrap gap-1.5">
-					<span
-						class="rounded border border-[#e4e9f0] bg-[#f0f3f8] px-1.5 py-1 text-[8px] text-[#56647a]">
-						Line Graph
-					</span>
-					<span
-						class="rounded border border-[#e4e9f0] bg-[#f0f3f8] px-1.5 py-1 text-[8px] text-[#56647a]">
-						Bar Chart
-					</span>
-					<span
-						class="rounded border border-[#e4e9f0] bg-[#f0f3f8] px-1.5 py-1 text-[8px] text-[#56647a]">
-						Pie Chart
-					</span>
-					<span
-						class="rounded border border-[#e4e9f0] bg-[#f0f3f8] px-1.5 py-1 text-[8px] text-[#56647a]">
-						Table
-					</span>
-					<span
-						class="rounded border border-[#e4e9f0] bg-[#f0f3f8] px-1.5 py-1 text-[8px] text-[#56647a]">
-						Process Diagram
-					</span>
-					<span
-						class="rounded border border-[#e4e9f0] bg-[#f0f3f8] px-1.5 py-1 text-[8px] text-[#56647a]">
-						Map Comparison
-					</span>
-					<span
-						class="rounded border border-[#e4e9f0] bg-[#f0f3f8] px-1.5 py-1 text-[8px] text-[#56647a]">
-						Multiple Visuals
-					</span>
+					<div class="badge rounded-xs badge-soft badge-xs">Line Graph</div>
+					<div class="badge rounded-xs badge-soft badge-xs">Bar Chart</div>
+					<div class="badge rounded-xs badge-soft badge-xs">Pie Chart</div>
+					<div class="badge rounded-xs badge-soft badge-xs">Table</div>
+					<div class="badge rounded-xs badge-soft badge-xs">Process Diagram</div>
+					<div class="badge rounded-xs badge-soft badge-xs">Map Comparison</div>
+					<div class="badge rounded-xs badge-soft badge-xs">Multiple Visuals</div>
 				</div>
 				<a class="btn mt-auto btn-primary" href={resolve("/task/1")}> Start Task 1 Practice </a>
 			</article>
+
 			<article
-				class="flex min-h-75 flex-col overflow-hidden rounded-xl border-2 border-[#5a4ffc] bg-white p-3.75">
-				<div
-					class="flex justify-between gap-1.5 text-[8px] font-bold whitespace-nowrap text-[#6f7e93]">
-					<span class="rounded bg-[#f0f2ff] px-1.5 py-1 text-[#5861eb]">
-						TASK 2 <b>• 67% SCORE WEIGHT (2x)</b>
-					</span>
+				class="flex min-h-75 flex-col overflow-hidden rounded-xl border border-base-100 bg-base-100 p-3.75 hover:border-primary">
+				<div class="flex justify-between gap-1.5 text-xs font-bold text-[#6f7e93]">
+					<span class="rounded bg-[#f0f2ff] px-1.5 py-1 text-primary"> TASK 2 </span>
 					<span class="flex items-center gap-1">
 						<Clock3 size={12} /> 40 mins • min 250 words
 					</span>
@@ -164,26 +138,11 @@
 				</p>
 				<strong class="mb-1 text-[9px] text-[#7a879b]">Supported Question Types:</strong>
 				<div class="flex flex-wrap gap-1.5">
-					<span
-						class="rounded border border-[#e4e9f0] bg-[#f0f3f8] px-1.5 py-1 text-[8px] text-[#56647a]">
-						Opinion (Agree/Disagree)
-					</span>
-					<span
-						class="rounded border border-[#e4e9f0] bg-[#f0f3f8] px-1.5 py-1 text-[8px] text-[#56647a]">
-						Discussion (Both Views)
-					</span>
-					<span
-						class="rounded border border-[#e4e9f0] bg-[#f0f3f8] px-1.5 py-1 text-[8px] text-[#56647a]">
-						Advantages &amp; Disadvantages
-					</span>
-					<span
-						class="rounded border border-[#e4e9f0] bg-[#f0f3f8] px-1.5 py-1 text-[8px] text-[#56647a]">
-						Problems &amp; Solutions
-					</span>
-					<span
-						class="rounded border border-[#e4e9f0] bg-[#f0f3f8] px-1.5 py-1 text-[8px] text-[#56647a]">
-						Two-Part Direct Questions
-					</span>
+					<div class="badge rounded-xs badge-soft badge-xs">Opinion (Agree/Disagree)</div>
+					<div class="badge rounded-xs badge-soft badge-xs">Discussion (Both Views)</div>
+					<div class="badge rounded-xs badge-soft badge-xs">Advantages & Disadvantages</div>
+					<div class="badge rounded-xs badge-soft badge-xs">Problems & Solutions</div>
+					<div class="badge rounded-xs badge-soft badge-xs">Two-Part Direct Questions</div>
 				</div>
 				<a class="btn mt-auto btn-primary" href={resolve("/task/2")}>
 					Start Task 2 Practice <ArrowRight size={15} strokeWidth={2.5} />

@@ -17,65 +17,63 @@
 	};
 </script>
 
-<div
-	class="min-h-screen w-full bg-[#fbfcff] font-sans text-[#202b40] antialiased [&_button]:text-[12px]! [&_h1]:text-[18px]! [&_h2]:text-[16px]! [&_h3]:text-[15px]! [&_nav_a]:text-[13px]! [&_p]:text-[12px]! [&_small]:text-[10px]! [&_span]:text-[10px]!">
+<div class="min-h-screen w-full bg-base-200 text-base-content">
 	<header
-		class="flex min-h-13.5 w-full flex-wrap items-center gap-4 border-b border-[#e2e7f1] bg-white px-4 py-2 sm:px-6 lg:flex-nowrap lg:gap-10 lg:px-9">
-		<a
-			class="flex min-w-29 items-center gap-2 text-[#202b40] no-underline"
-			href={resolve("/")}
-			aria-label="LexisWriting home">
-			<span
-				class="grid h-7.25 w-7.25 place-items-center rounded-lg bg-[#5045e8] text-[12px] font-extrabold text-white">
-				AI
-			</span>
-			<span class="flex flex-col leading-[1.1] whitespace-nowrap">
-				<strong class="text-[14px]">LexisWriting</strong>
-				<small class="mt-0.5 text-[8px] text-[#8792a6]">IELTS Academic AI Tutor</small>
-			</span>
-		</a>
-		<nav
-			class="order-3 flex h-8 w-full items-center justify-between gap-1 lg:order-0 lg:h-auto lg:w-auto lg:gap-3"
-			aria-label="Main navigation">
+		class="flex flex-col items-center gap-2 border-b border-base-content/10 bg-base-100 px-4 py-2">
+		<div class="flex w-full justify-between">
 			<a
-				class="rounded-lg bg-[#eef0ff] px-3 py-1.5 text-[12px] font-bold text-[#5045e8] no-underline"
+				class="flex min-w-29 items-center gap-2"
+				href={resolve("/")}
+				aria-label="LexisWriting home">
+				<span
+					class="grid h-9.5 w-9.5 place-items-center rounded-lg bg-primary font-extrabold text-primary-content">
+					AI
+				</span>
+				<div class="flex flex-col">
+					<h1 class="text-lg font-bold">LexisWriting</h1>
+					<h2 class="text-xs text-base-content/75">IELTS Academic AI Tutor</h2>
+				</div>
+			</a>
+
+			<div class="ml-auto flex items-center gap-2 sm:gap-3">
+				{#if data.session}
+					<div class="badge hidden badge-outline badge-sm font-semibold badge-warning sm:inline">
+						🔥 5-Day Streak
+					</div>
+					<div class="badge hidden badge-soft badge-sm font-semibold sm:inline">
+						Target: Band 7.5
+					</div>
+
+					<div class="avatar">
+						<img
+							class="w-8 rounded-full ring ring-base-content/20"
+							src={data.user?.image}
+							alt={data.user?.name} />
+					</div>
+					<div class="text-sm">{data.user?.name}</div>
+					<button class="btn btn-soft btn-error btn-sm" onclick={handleLogout}>Logout</button>
+				{:else}
+					<a href={resolve("/login")} class="btn btn-primary">Sign in</a>
+				{/if}
+			</div>
+		</div>
+
+		<nav class="flex w-full items-center justify-evenly gap-1 text-sm" aria-label="Main navigation">
+			<a
+				class="rounded-lg bg-[#eef0ff] px-3 py-1.5 font-semibold text-[#5045e8]"
 				href={resolve("/")}>
 				Practice
 			</a>
-			<a
-				class="rounded-lg px-3 py-1.5 text-[12px] font-bold text-[#45536b] no-underline"
-				href={resolve("/")}>
+			<a class="rounded-lg px-3 py-1.5 font-semibold text-base-content" href={resolve("/")}>
 				Progress
 			</a>
-			<a
-				class="rounded-lg px-3 py-1.5 text-[12px] font-bold text-[#45536b] no-underline"
-				href={resolve("/")}>
+			<a class="rounded-lg px-3 py-1.5 font-semibold text-base-content" href={resolve("/")}>
 				History
 			</a>
-			<a
-				class="rounded-lg px-3 py-1.5 text-[12px] font-bold text-[#45536b] no-underline"
-				href={resolve("/")}>
+			<a class="rounded-lg px-3 py-1.5 font-semibold text-base-content" href={resolve("/")}>
 				AI Tutor
 			</a>
 		</nav>
-
-		<div class="ml-auto flex items-center gap-2 text-[10px] font-bold whitespace-nowrap sm:gap-3">
-			{#if data.session}
-				<span class="hidden rounded-2xl border border-[#f5d994] px-2 py-1 text-[#d88400] sm:inline">
-					🔥 5-Day Streak
-				</span>
-				<span class="hidden rounded-2xl bg-[#f0f3f7] px-2.5 py-1.5 text-[#68758a] sm:inline">
-					Target: Band 7.5
-				</span>
-
-				<img
-					class="grid h-7.5 w-7.5 place-items-center rounded-full"
-					src={data.user?.image}
-					alt={data.user?.name} />
-				<span>{data.user?.name}</span>
-				<button class="btn btn-link btn-error" onclick={handleLogout}>Logout</button>
-			{/if}
-		</div>
 	</header>
 
 	{@render children()}

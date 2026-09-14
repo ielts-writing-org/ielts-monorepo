@@ -1,7 +1,6 @@
 import { z } from "zod";
 
-// Positive
-const task2EvaluationCheckSchema = z.object({
+const CheckEvaluationResponseSchema = z.object({
 	id: z.string(),
 	weight: z.number().min(0).max(1),
 	status: z.enum(["met", "partially_met", "not_met", "not_applicable"]),
@@ -9,32 +8,31 @@ const task2EvaluationCheckSchema = z.object({
 	why: z.string().max(200)
 });
 
-// Negative
-const task2EvaluationProblemSchema = z.object({
+const ProblemEvaluationResponseSchema = z.object({
 	what: z.string(),
 	evidence: z.string(),
 	how_to: z.string()
 });
 
-const task2EvaluationCriterionSchema = z.object({
+const CriterionEvaluationResponseSchema = z.object({
 	band: z.number().nullable(),
-	checks: z.array(task2EvaluationCheckSchema),
-	problems: z.array(task2EvaluationProblemSchema),
+	checks: z.array(CheckEvaluationResponseSchema),
+	problems: z.array(ProblemEvaluationResponseSchema),
 	why_this_band: z.string(),
 	why_not_next_band: z.string().nullable()
 });
 
-export const task2EvaluationResponseSchema = z.object({
+export const EvaluationResponseSchema = z.object({
 	criteria: z.object({
-		task_response: task2EvaluationCriterionSchema,
-		coherence_and_cohesion: task2EvaluationCriterionSchema,
-		lexical_resource: task2EvaluationCriterionSchema,
-		grammatical_range_and_accuracy: task2EvaluationCriterionSchema
+		task_response: CriterionEvaluationResponseSchema,
+		coherence_and_cohesion: CriterionEvaluationResponseSchema,
+		lexical_resource: CriterionEvaluationResponseSchema,
+		grammatical_range_and_accuracy: CriterionEvaluationResponseSchema
 	}),
 	overall_band: z.number().nullable()
 });
 
-export type Task2EvaluationCheck = z.infer<typeof task2EvaluationCheckSchema>;
-export type Task2EvaluationProblem = z.infer<typeof task2EvaluationProblemSchema>;
-export type Task2EvaluationCriterion = z.infer<typeof task2EvaluationCriterionSchema>;
-export type Task2EvaluationResponse = z.infer<typeof task2EvaluationResponseSchema>;
+export type CheckEvaluationResponse = z.infer<typeof CheckEvaluationResponseSchema>;
+export type ProblemEvaluationResponse = z.infer<typeof ProblemEvaluationResponseSchema>;
+export type CriterionEvaluationResponse = z.infer<typeof CriterionEvaluationResponseSchema>;
+export type EvaluationResponse = z.infer<typeof EvaluationResponseSchema>;

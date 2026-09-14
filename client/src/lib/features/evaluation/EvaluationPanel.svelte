@@ -3,8 +3,11 @@
 	import { errorModal } from "$lib/shared/error/ErrorModal.svelte";
 	import JSONParser from "@streamparser/json/jsonparser.js";
 	import { EventSourceParserStream } from "eventsource-parser/stream";
-	import type { Task2EvaluationCriterion, Task2EvaluationResponse } from "ielts-shared/schemas";
 	import { EvaluationApi } from "./api";
+	import type {
+		EvaluationResponse,
+		CriterionEvaluationResponse
+	} from "ielts-shared/schemas/evaluation-response";
 
 	type EvaluationPanelProps = {
 		taskContext: { topic: string; response: string };
@@ -12,7 +15,7 @@
 
 	const { taskContext }: EvaluationPanelProps = $props();
 
-	let reponse = $state<Task2EvaluationResponse | undefined>();
+	let reponse = $state<EvaluationResponse | undefined>();
 	let isExecuting = $state(false);
 
 	const criteriaMap = {
@@ -20,9 +23,9 @@
 		coherence_and_cohesion: "Coherence and Cohesion",
 		lexical_resource: "Lexical Resource",
 		grammatical_range_and_accuracy: "Grammatical Range and Accuracy"
-	} as const satisfies Record<keyof Task2EvaluationResponse["criteria"], string>;
+	} as const satisfies Record<keyof EvaluationResponse["criteria"], string>;
 
-	const emptyCriterion: Task2EvaluationCriterion = {
+	const emptyCriterion: CriterionEvaluationResponse = {
 		band: null,
 		checks: [],
 		problems: [],
@@ -31,7 +34,7 @@
 	};
 
 	let api = new EvaluationApi();
-	async function executeEvaluation(topic: string, response: string) {
+	async function executeEvaluation(task_prompt: string, response: string) {
 		try {
 			api.abort();
 
@@ -46,16 +49,16 @@
 				overall_band: null
 			};
 
-			const stream = await api.send({ topic, response_text: response });
+			const stream = await api.send({ task_prompt, response_text: response });
 			const reader = stream.pipeThrough(new EventSourceParserStream()).getReader();
 
 			const parser = new JSONParser({ paths: ["$", "$.*", "$.criteria.*"] });
 			parser.onValue = ({ key, stack, value }) => {
 				if (!reponse || !value) return;
 				if (stack.length === 1 && key === "overall_band") {
-					reponse.overall_band = value as Task2EvaluationResponse["overall_band"];
+					reponse.overall_band = value as EvaluationResponse["overall_band"];
 				} else if (stack.length === 2 && stack[1]?.key === "criteria" && isCriteriaKey(key)) {
-					reponse.criteria[key] = value as Task2EvaluationCriterion;
+					reponse.criteria[key] = value as CriterionEvaluationResponse;
 				}
 			};
 
@@ -107,7 +110,7 @@
 			<details class="collapse-arrow collapse bg-base-100">
 				<summary class="collapse-title cursor-pointer p-0 font-semibold">
 					<p>
-						{criteriaMap[criterion as keyof Task2EvaluationResponse["criteria"]] || criterion}
+						{criteriaMap[criterion as keyof EvaluationResponse["criteria"]] || criterion}
 					</p>
 					{#if evaluation.band}
 						<p

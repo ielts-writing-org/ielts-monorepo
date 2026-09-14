@@ -1,4 +1,4 @@
-import type { ChatRequest } from "ielts-shared";
+import type { ChatRequest } from "ielts-shared/schemas/chat-request";
 
 export type ChatCommand = (
 	| Exclude<ChatRequest[number], { type: "context" }>

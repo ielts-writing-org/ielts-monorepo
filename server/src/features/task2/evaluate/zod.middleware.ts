@@ -1,4 +1,4 @@
 import { validator } from "hono-openapi";
-import { task2EvaluationRequestSchema } from "ielts-shared";
+import { Task2EvaluationRequestSchema } from "ielts-shared/schemas/evaluation-request";
 
-export const validateTask2EvaluateRequest = validator("json", task2EvaluationRequestSchema);
+export const validateTask2EvaluateRequest = validator("json", Task2EvaluationRequestSchema);

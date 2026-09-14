@@ -1,4 +1,4 @@
-import { computeDeterministicStats } from "ielts-shared";
+import { computeDeterministicStats } from "ielts-shared/utils/deterministic-stats";
 import { CONTAINER_CLASSES, CONTAINER_SCOPE_INPUTS } from "../shared/config";
 import type { ChatCommand } from "./chat-client.port";
 import { addTask2ChatOpenApiDef } from "./openapi.middleware";

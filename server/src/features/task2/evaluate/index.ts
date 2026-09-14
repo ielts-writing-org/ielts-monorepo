@@ -1,4 +1,4 @@
-import { computeDeterministicStats } from "ielts-shared";
+import { computeDeterministicStats } from "ielts-shared/utils/deterministic-stats";
 import { CONTAINER_CLASSES, CONTAINER_SCOPE_INPUTS } from "../shared/config";
 import { addTask2EvaluateOpenApiDef } from "./openapi.middleware";
 import { validateTask2EvaluateRequest } from "./zod.middleware";

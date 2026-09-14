@@ -2,9 +2,9 @@
 	import { errorModal } from "$lib/shared/error/ErrorModal.svelte";
 	import { Send } from "@lucide/svelte";
 	import { EventSourceParserStream } from "eventsource-parser/stream";
-	import type { ChatMessage } from "ielts-shared";
 	import { marked } from "marked";
 	import { ChatApi } from "./api";
+	import type { ChatMessage } from "ielts-shared/schemas/chat-request";
 
 	type ChatPanelProps = {
 		// TODO: Add evaluations if existed

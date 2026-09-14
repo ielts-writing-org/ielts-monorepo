@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const chatMessageSchema = z.discriminatedUnion("type", [
+export const ChatMessageSchema = z.discriminatedUnion("type", [
 	z.object({
 		role: z.enum(["user", "assistant"]),
 		type: z.literal("content"),
@@ -16,7 +16,7 @@ export const chatMessageSchema = z.discriminatedUnion("type", [
 	})
 ]);
 
-export const chatRequestSchema = z.array(chatMessageSchema).min(1);
+export const ChatRequestSchema = z.array(ChatMessageSchema).min(2);
 
-export type ChatMessage = z.infer<typeof chatMessageSchema>;
-export type ChatRequest = z.infer<typeof chatRequestSchema>;
+export type ChatMessage = z.infer<typeof ChatMessageSchema>;
+export type ChatRequest = z.infer<typeof ChatRequestSchema>;

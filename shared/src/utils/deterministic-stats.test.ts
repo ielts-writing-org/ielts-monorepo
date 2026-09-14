@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { computeDeterministicStats, type DeterministicStats } from "./essay.ts";
+import { computeDeterministicStats, type DeterministicStats } from "./deterministic-stats.ts";
 
 describe("ESSAY UTILS TESTS", () => {
 	describe("DETERMINISTIC STATS TESTS", () => {

@@ -1,5 +1,5 @@
 import { env } from "$env/dynamic/public";
-import { chatRequestSchema, type ChatRequest } from "ielts-shared";
+import { ChatRequestSchema, type ChatRequest } from "ielts-shared/schemas/chat-request";
 import z from "zod";
 
 export class ChatApi {
@@ -8,7 +8,7 @@ export class ChatApi {
 	send = async (request: ChatRequest): Promise<ReadableStream<string>> => {
 		this.abort();
 
-		const validRequest = z.parse(chatRequestSchema, request);
+		const validRequest = z.parse(ChatRequestSchema, request);
 
 		const response = await fetch(env.PUBLIC_SERVER_URL + "/api/task2/chat", {
 			method: "POST",

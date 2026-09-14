@@ -1,5 +1,8 @@
 import { env } from "$env/dynamic/public";
-import { task2EvaluationRequestSchema, type Task2EvaluationRequest } from "ielts-shared/schemas";
+import {
+	Task2EvaluationRequestSchema,
+	type Task2EvaluationRequest
+} from "ielts-shared/schemas/evaluation-request";
 import z from "zod";
 
 export class EvaluationApi {
@@ -8,7 +11,7 @@ export class EvaluationApi {
 	send = async (request: Task2EvaluationRequest): Promise<ReadableStream<string>> => {
 		this.abort();
 
-		const validRequest = z.parse(task2EvaluationRequestSchema, request);
+		const validRequest = z.parse(Task2EvaluationRequestSchema, request);
 
 		const response = await fetch(env.PUBLIC_SERVER_URL + "/api/task2/evaluate", {
 			method: "POST",

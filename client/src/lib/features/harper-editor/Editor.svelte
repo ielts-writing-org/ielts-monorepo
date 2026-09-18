@@ -33,7 +33,7 @@
 	}
 
 	let {
-		content = $bindable(""),
+		content = "",
 		linter,
 		onReady = () => null,
 		defaultFontFamily = "sans",
@@ -318,13 +318,17 @@
 </script>
 
 <div
-	class="harper-editor @container flex h-full min-h-0 w-full grow-0 basis-full flex-col overflow-hidden rounded-md bg-base-100 text-base-content"
+	class="harper-editor @container flex h-full min-h-0 w-full grow-0 basis-full flex-col overflow-hidden rounded-box bg-base-100 text-base-content"
 	style={editorStyle}>
 	<div class="flex min-h-0 min-w-0 flex-1">
 		<section class="relative min-w-0 flex-1 bg-base-100" aria-label="Document editor">
-			<div class="h-full overflow-auto px-10 py-4 @max-[760px]:px-6 @max-[760px]:py-4">
+			<div class="h-full overflow-auto px-8">
 				<div class="flex min-h-full">
-					<div bind:this={editor} class="flex min-h-full w-full flex-1" spellcheck="false"></div>
+					<div
+						bind:this={editor}
+						class="flex min-h-full w-full flex-1 indent-4 [&_p]:mb-2!"
+						spellcheck="false">
+					</div>
 				</div>
 			</div>
 

@@ -19,9 +19,29 @@
 			<h3 class="hidden text-xs lg:block">{page.data.pageSubtitle}</h3>
 		</div>
 	</div>
+	<div class="navbar-center">
+		<ThemeToggle currentTheme={data.theme} />
+	</div>
 
 	<div class="navbar-end">
-		<ThemeToggle isNightTheme={data.theme === "night"} />
+		<div class="flex items-center gap-2 sm:gap-3">
+			{#if data.session}
+				<div class="badge hidden badge-outline badge-sm font-semibold badge-warning sm:inline">
+					🔥 5<span class="hidden md:inline">-Day Streak</span>
+				</div>
+				<div class="badge hidden badge-soft badge-sm font-semibold sm:inline">Target: 7.5</div>
+
+				<div class="text-sm font-semibold">{data.user?.name}</div>
+				<div class="avatar">
+					<img
+						class="w-8 rounded-full ring ring-base-content/20"
+						src={data.user?.image}
+						alt={data.user?.name} />
+				</div>
+			{:else}
+				<a href={resolve("/login")} class="btn btn-primary">Sign in</a>
+			{/if}
+		</div>
 	</div>
 </header>
 

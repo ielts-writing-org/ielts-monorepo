@@ -11,4 +11,6 @@ export type AppEnv = {
 	};
 } & InferdiHonoEnv<RootContainer>;
 
-export const factory = createFactory<AppEnv>();
+const appFactory = createFactory<AppEnv>();
+
+export default appFactory;

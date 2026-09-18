@@ -3,10 +3,16 @@
 @plugin 'daisyui' {
 	themes:
 		light --default,
-		night --prefersdark;
+		forest --prefersdark,
+		abyss,
+		dark,
+		emerald,
+		night,
+		nord,
+		winter;
 	logs: false;
 }
-@custom-variant dark (&:where([data-theme=night], [data-theme=night] *));
+@custom-variant dark (&:where([data-theme=forest], [data-theme=forest] *));
 
 * {
 	@apply scrollbar-thin;

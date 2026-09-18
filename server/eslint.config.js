@@ -1,5 +1,5 @@
 import js from "@eslint/js";
-import baseConfig from "@hono/eslint-config";
+import honoConfig from "@hono/eslint-config";
 import { defineConfig, includeIgnoreFile } from "eslint/config";
 import globals from "globals";
 import path from "node:path";
@@ -17,7 +17,7 @@ export default defineConfig(
 				tsconfigRootDir: path.resolve(import.meta.dirname)
 			}
 		},
-		extends: [baseConfig]
+		extends: [honoConfig]
 	},
 	{
 		files: ["**/*.js"],

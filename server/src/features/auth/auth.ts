@@ -7,11 +7,11 @@ export const auth = betterAuth({
 	database: env.MAIN_DB,
 	socialProviders: {
 		github: {
-			clientId: process.env.GITHUB_CLIENT_ID,
-			clientSecret: process.env.GITHUB_CLIENT_SECRET
+			clientId: env.GITHUB_CLIENT_ID,
+			clientSecret: env.GITHUB_CLIENT_SECRET
 		}
 	},
-	trustedOrigins: ["http://localhost:5173"],
+	trustedOrigins: env.CORS_ORIGINS.split(","),
 	plugins: [admin(), dash()],
 	advanced: {
 		database: {

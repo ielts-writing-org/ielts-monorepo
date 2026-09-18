@@ -44,13 +44,13 @@
 						Target: Band 7.5
 					</div>
 
+					<div class="text-sm font-semibold">{data.user?.name}</div>
 					<div class="avatar">
 						<img
 							class="w-8 rounded-full ring ring-base-content/20"
 							src={data.user?.image}
 							alt={data.user?.name} />
 					</div>
-					<div class="text-sm">{data.user?.name}</div>
 					<button class="btn btn-soft btn-error btn-sm" onclick={handleLogout}>Logout</button>
 				{:else}
 					<a href={resolve("/login")} class="btn btn-primary">Sign in</a>

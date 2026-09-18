@@ -1,7 +1,7 @@
 import { auth } from "./auth";
-import { factory } from "@/shared/app-env";
+import appFactory from "@/app-factory";
 
-export const sessionMiddleware = factory.createMiddleware(async (c, next) => {
+export const sessionMiddleware = appFactory.createMiddleware(async (c, next) => {
 	const session = await auth.api.getSession({
 		headers: c.req.raw.headers
 	});

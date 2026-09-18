@@ -42,18 +42,18 @@ In conclusion, the platform aims to make writing practice more interactive, resp
 
 ## Client environment variables
 
-| Variable               | Value                   |
-| ---------------------- | ----------------------- |
-| PUBLIC_SERVER_URL      | <http://localhost:8787> |
-| PUBLIC_BETTER_AUTH_URL | ${PUBLIC_SERVER_URL}    |
+| Variable          | Value                   |
+| ----------------- | ----------------------- |
+| PUBLIC_SERVER_URL | <http://localhost:8787> |
 
 ## Server KV entries
 
-| Namespace | Key               | Description                                                |
-| --------- | ----------------- | ---------------------------------------------------------- |
-| TASK2_KV  | chat-prompt       | The chat prompt to use when chat with AI                   |
-| TASK2_KV  | evaluation-prompt | The evaluation prompt to use when evaluate with AI         |
-| TASK2_KV  | response-schema   | The response schema when AI response to evaluation request |
+| Namespace | Key               | Description                                        |
+| --------- | ----------------- | -------------------------------------------------- |
+| TASK1_KV  | chat-prompt       | The chat prompt to use when chat with AI           |
+| TASK1_KV  | evaluation-prompt | The evaluation prompt to use when evaluate with AI |
+| TASK2_KV  | chat-prompt       | The chat prompt to use when chat with AI           |
+| TASK2_KV  | evaluation-prompt | The evaluation prompt to use when evaluate with AI |
 
 ## Root Endpoints
 
@@ -62,10 +62,11 @@ Base:
 - <http://localhost:8787>
 - <http://127.0.0.1:8787>
 
-| No  | Endpoint | Method | Description                      | Dev? |
-| --- | -------- | ------ | -------------------------------- | :--: |
-| 1   | /        | Any    | Application's health             |      |
-| 2   | /api     | Any    | API Routes (BetterAuth included) |      |
-| 3   | /openapi | GET    | OpenAPI docs (JSON)              |  x   |
-| 4   | /scalar  | GET    | ScalarUI                         |  x   |
-| 4   | /migrate | POST   | Migrate database                 |  x   |
+| No  | Endpoint    | Method | Description                      | Dev? |
+| --- | ----------- | ------ | -------------------------------- | :--: |
+| 1   | /           | GET    | Application's health             |      |
+| 2   | /api        | Any    | API Routes (BetterAuth included) |      |
+| 2   | /api/health | GET    | Application's health             |      |
+| 3   | /openapi    | GET    | OpenAPI docs (JSON)              |  x   |
+| 4   | /scalar     | GET    | ScalarUI                         |  x   |
+| 4   | /migrate    | POST   | Migrate database                 |  x   |

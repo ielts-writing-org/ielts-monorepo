@@ -23,6 +23,10 @@
 	// },
 	"kv_namespaces": [
 		{
+			"binding": "TASK1_KV",
+			"id": "0fa03557573b4abc97f48a56d47fd7ee"
+		},
+		{
 			"binding": "TASK2_KV",
 			"id": "cc61a444e44740b6b1d9ff59a1f3f75b"
 		}

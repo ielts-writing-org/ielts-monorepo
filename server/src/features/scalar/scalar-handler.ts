@@ -1,8 +1,9 @@
 import { Scalar } from "@scalar/hono-api-reference";
 
-export function handleScalarRoute() {
-	return Scalar({
+const scalarHandler = () =>
+	Scalar({
 		url: "/openapi",
 		pageTitle: "IELTS Writing Scalar API Reference"
 	});
-}
+
+export default scalarHandler;

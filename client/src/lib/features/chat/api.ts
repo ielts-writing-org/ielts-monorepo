@@ -10,12 +10,15 @@ export class ChatApi {
 
 		const validRequest = z.parse(ChatRequestSchema, request);
 
-		const response = await fetch(env.PUBLIC_SERVER_URL + "/api/task2/chat", {
-			method: "POST",
-			headers: { "Content-Type": "application/json" },
-			body: JSON.stringify(validRequest),
-			signal: this.#abortController.signal
-		});
+		const response = await fetch(
+			`${env.PUBLIC_SERVER_URL}/api/chat/${request.chatContext.context.taskId}`,
+			{
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify(validRequest),
+				signal: this.#abortController.signal
+			}
+		);
 
 		if (
 			!response.ok ||

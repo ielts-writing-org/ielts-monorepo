@@ -1,19 +1,20 @@
 import { env } from "$env/dynamic/public";
 import {
-	Task2EvaluationRequestSchema,
-	type Task2EvaluationRequest
+	EvaluationRequestSchema,
+	type EvaluationRequest
 } from "ielts-shared/schemas/evaluation-request";
+
 import z from "zod";
 
 export class EvaluationApi {
 	#abortController = new AbortController();
 
-	send = async (request: Task2EvaluationRequest): Promise<ReadableStream<string>> => {
+	send = async (request: EvaluationRequest, taskId: number): Promise<ReadableStream<string>> => {
 		this.abort();
 
-		const validRequest = z.parse(Task2EvaluationRequestSchema, request);
+		const validRequest = z.parse(EvaluationRequestSchema, request);
 
-		const response = await fetch(env.PUBLIC_SERVER_URL + "/api/task2/evaluate", {
+		const response = await fetch(`${env.PUBLIC_SERVER_URL}/api/evaluation/${taskId}`, {
 			method: "POST",
 			headers: { "Content-Type": "application/json" },
 			body: JSON.stringify(validRequest),

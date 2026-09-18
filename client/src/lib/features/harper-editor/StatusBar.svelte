@@ -26,7 +26,7 @@
 	}: Props = $props();
 
 	const fontButtonClass =
-		"inline-flex h-4 min-w-7 items-center justify-center rounded px-2 text-xs leading-none font-medium text-stone-500";
+		"inline-flex h-4 min-w-7 items-center justify-center rounded-selector px-2 text-xs leading-none font-medium text-stone-500";
 
 	let words = $derived(wordCount(text));
 	let chars = $derived(text.length);
@@ -37,8 +37,8 @@
 	aria-label="Editor status">
 	<div class="inline-flex items-center gap-2">
 		<span class="inline-flex items-center gap-1.5">
-			<span class={`h-1.5 w-1.5 rounded-full ${problemCount === 0 ? "bg-success" : "bg-error"}`}
-			></span>
+			<span class={`h-1.5 w-1.5 rounded-full ${problemCount === 0 ? "bg-success" : "bg-error"}`}>
+			</span>
 			{#if problemCount === 0}
 				All clear
 			{:else}
@@ -54,7 +54,7 @@
 	<span class="flex-1"></span>
 
 	<div
-		class="inline-flex h-4.5 items-center rounded-[5px] border-[0.5px] border-base-content/10 bg-base-200 p-px"
+		class="inline-flex h-4.5 items-center rounded-selector border-[0.5px] border-base-content/10 bg-base-200 p-px"
 		aria-label="Font family">
 		{#each FONT_OPTIONS as option (option.label)}
 			<button
@@ -75,7 +75,7 @@
 	</div>
 
 	<label
-		class="relative inline-flex h-4.5 items-center rounded-[5px] border-[0.5px] border-base-content/10 bg-base-200 pr-4.5 pl-2 text-[11px] font-medium text-base-content after:absolute after:top-1/2 after:right-1.25 after:-translate-y-1/2 after:font-[-apple-system,BlinkMacSystemFont,'SF_Pro_Text',sans-serif] after:text-[9px] after:leading-none after:text-stone-500 after:content-['v']">
+		class="relative inline-flex h-4.5 items-center rounded-selector border-[0.5px] border-base-content/10 bg-base-200 pr-4.5 pl-2 text-[11px] font-medium text-base-content after:absolute after:top-1/2 after:right-1.25 after:-translate-y-1/2 after:font-[-apple-system,BlinkMacSystemFont,'SF_Pro_Text',sans-serif] after:text-[9px] after:leading-none after:text-stone-500 after:content-['v']">
 		<span>{fontSize === "default" ? "Default" : `${fontSize}px`}</span>
 		<select
 			value={fontSize}

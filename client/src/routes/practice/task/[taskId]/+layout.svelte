@@ -38,8 +38,6 @@
 						src={data.user?.image}
 						alt={data.user?.name} />
 				</div>
-			{:else}
-				<a href={resolve("/login")} class="btn btn-primary">Sign in</a>
 			{/if}
 		</div>
 	</div>

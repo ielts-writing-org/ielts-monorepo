@@ -121,7 +121,9 @@
 					<div class="badge rounded-xs badge-soft badge-xs">Map Comparison</div>
 					<div class="badge rounded-xs badge-soft badge-xs">Multiple Visuals</div>
 				</div>
-				<a class="btn mt-auto btn-primary" href={resolve("/task/1")}> Start Task 1 Practice </a>
+				<a class="btn mt-auto btn-primary" href={resolve("/practice/task/1")}>
+					Start Task 1 Practice
+				</a>
 			</article>
 
 			<article
@@ -144,7 +146,7 @@
 					<div class="badge rounded-xs badge-soft badge-xs">Problems & Solutions</div>
 					<div class="badge rounded-xs badge-soft badge-xs">Two-Part Direct Questions</div>
 				</div>
-				<a class="btn mt-auto btn-primary" href={resolve("/task/2")}>
+				<a class="btn mt-auto btn-primary" href={resolve("/practice/task/2")}>
 					Start Task 2 Practice <ArrowRight size={15} strokeWidth={2.5} />
 				</a>
 			</article>

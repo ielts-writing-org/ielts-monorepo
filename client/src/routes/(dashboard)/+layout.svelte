@@ -53,7 +53,7 @@
 					</div>
 					<button class="btn btn-soft btn-error btn-sm" onclick={handleLogout}>Logout</button>
 				{:else}
-					<a href={resolve("/login")} class="btn btn-primary">Sign in</a>
+					<a href={resolve("/signin")} class="btn btn-primary">Sign in</a>
 				{/if}
 			</div>
 		</div>

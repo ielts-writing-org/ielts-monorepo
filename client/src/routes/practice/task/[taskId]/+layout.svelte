@@ -10,7 +10,10 @@
 
 <header class="navbar sticky top-0 z-50 mb-2 bg-base-200 shadow">
 	<div class="navbar-start lg:gap-4">
-		<a href={resolve("/")} class="btn btn-sm not-lg:btn-ghost lg:btn-md">
+		<a
+			href={resolve("/")}
+			class="btn btn-sm not-lg:btn-ghost lg:btn-md"
+			aria-label="Back to Dashboard">
 			<ArrowLeft size="1em" />
 			<span class="hidden lg:inline">Dashboard</span>
 		</a>

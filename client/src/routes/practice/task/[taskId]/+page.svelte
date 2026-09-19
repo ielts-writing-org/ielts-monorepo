@@ -18,7 +18,7 @@
 	onMount(async () => {
 		taskState = { taskPrompt: data.topic, taskResponse: data.response };
 
-		const { binary } = await import("harper.js/binary");
+		const { slimBinary: binary } = await import("harper.js/slimBinary");
 		linters.push(new WorkerLinter({ binary, dialect: Dialect.American }));
 		linters.push(new WorkerLinter({ binary, dialect: Dialect.British }));
 	});
@@ -93,7 +93,7 @@
 	<aside class="h-[calc(100dvh-6rem)] flex-1">
 		<div role="tablist" class="tabs tabs-lift h-full">
 			<label class="tab [--tab-border-color:var(--color-base-content)]/20">
-				<input type="radio" name="tab" aria-label="Tab Evaluation" defaultChecked />
+				<input type="radio" name="tab" aria-label="Tab Evaluation" defaultChecked role="tab" />
 				Evaluation
 			</label>
 			<div class="tab-content border-base-content/20">
@@ -101,7 +101,7 @@
 			</div>
 
 			<label class="tab [--tab-border-color:var(--color-base-content)]/20">
-				<input type="radio" name="tab" aria-label="Tab Chat" />
+				<input type="radio" name="tab" aria-label="Tab Chat" role="tab" />
 				Chat
 			</label>
 			<div class="tab-content border-base-content/20">

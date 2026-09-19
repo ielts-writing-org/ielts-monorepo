@@ -30,7 +30,12 @@
 	}
 </script>
 
-<select class="select" name="theme" onchange={handleThemeChange} value={currentTheme}>
+<select
+	class="select"
+	name="theme"
+	aria-label="Theme switcher"
+	onchange={handleThemeChange}
+	value={currentTheme}>
 	{#each Object.entries(themeGroups) as themeGroup (themeGroup)}
 		<optgroup label={themeGroup[0]}>
 			{#each themeGroup[1] as theme (theme)}

@@ -52,11 +52,11 @@ export default class LintFramework {
 	private renderRequested = false;
 	private lintDelayTimer: number | null = null;
 	private intervalTimer: ReturnType<typeof setTimeout> | null = null;
-	private lastInputAt = 0;
+	private lastInputAt: number = 0;
 	private lastLints: { target: HTMLElement; lints: UnpackedLintGroups }[] = [];
 	private lastBoxes: IgnorableLintBox[] = [];
 	private lastLintBoxes: IgnorableLintBox[] = [];
-	private scrollRaf: number | null = null;
+	private updateEventCallbackRequested: boolean = false;
 
 	/** The function to be called to re-render the highlights. This is a variable because it is used to register/deregister event listeners. */
 	private updateEventCallback: () => void;
@@ -94,13 +94,13 @@ export default class LintFramework {
 		this.lastLints = [];
 
 		this.updateEventCallback = () => {
-			if (this.scrollRaf != null) return;
+			if (this.updateEventCallbackRequested) return;
 
-			this.scrollRaf = requestAnimationFrame(() => {
-				this.lastInputAt = Date.now();
+			this.updateEventCallbackRequested = true;
+			requestAnimationFrame(() => {
 				this.requestRender();
 				this.requestLintUpdate();
-				this.scrollRaf = null;
+				this.updateEventCallbackRequested = false;
 			});
 		};
 
@@ -352,6 +352,8 @@ export default class LintFramework {
 		if (this.renderRequested) {
 			return;
 		}
+
+		this.lastInputAt = Date.now();
 
 		this.renderRequested = true;
 

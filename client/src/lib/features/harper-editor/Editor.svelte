@@ -25,7 +25,7 @@
 
 	interface Props {
 		content?: string;
-		linter: Linter;
+		linters: Linter[];
 		onReady?: () => void;
 		defaultFontFamily?: EditorFontFamily;
 		defaultFontSize?: EditorFontSize;
@@ -34,7 +34,7 @@
 
 	let {
 		content = "",
-		linter,
+		linters,
 		onReady = () => null,
 		defaultFontFamily = "sans",
 		defaultFontSize = "default",
@@ -57,29 +57,59 @@
 	let mutationObserver = $state<MutationObserver>();
 	let quillTextChangeHandler: (() => void) | null = null;
 
+	function merge<T extends UnpackedLintGroups>(o1: T, o2: T): T {
+		return Object.fromEntries(
+			Object.keys(o1).map((key) => [
+				key,
+				key === "SpellCheck" || key === "Regionalisms"
+					? o1[key].filter((x) => o2[key].includes(x))
+					: [
+							...o1[key],
+							...o2[key].filter((x) => !o1[key].map((m) => m.context_hash).includes(x.context_hash))
+						]
+			])
+		) as T;
+	}
+
 	onMount(async () => {
 		lfw = new LintFramework(
 			async (text) => {
-				const raw = await linter.organizedLints(text);
-				// The framework expects grouped lints keyed by source
-				const entries = await Promise.all(
-					Object.entries(raw).map(async ([source, lintGroup]: [string, Lint[]]) => {
-						const unpacked = await Promise.all(
-							lintGroup.map((lint) => unpackLint(text, lint, linter))
-						);
-						lintGroup.forEach((l) => {
-							l.free();
-						});
+				const raws = await Promise.all(linters.map((l) => l.organizedLints(text)));
 
-						return [source, unpacked] as const;
+				const groupedByLinters: UnpackedLintGroups[] = await Promise.all(
+					raws.map(async (raw, i) => {
+						// The framework expects grouped lints keyed by source
+						const entries = await Promise.all(
+							// Convert internal Harper.js Lint to custom UnpackedLint (avoid depending on external library)
+							Object.entries(raw).map(async ([source, lintGroup]: [string, Lint[]]) => {
+								const unpacked = await Promise.all(
+									lintGroup.map((lint) => unpackLint(text, lint, linters[i]))
+								);
+								lintGroup.forEach((l) => {
+									l.free();
+								});
+
+								return [source, unpacked] as const;
+							})
+						);
+
+						return Object.fromEntries(entries);
 					})
 				);
 
-				const grouped: UnpackedLintGroups = Object.fromEntries(entries);
+				// TODO: Confirm if remove this work
+				// scheduleLintBoxSync();
 
-				scheduleLintBoxSync();
+				// TODO: Remove
+				// console.log(
+				// 	Object.entries(merge(groupedByLinters[0], groupedByLinters[1])).filter((f) => f[1].length)
+				// );
 
-				return grouped;
+				// TODO: Remove
+				// console.log(groupedByLinters.map((m) => Object.entries(m).filter((f) => f[1].length)));
+
+				// TODO: Support more linters
+				return merge(groupedByLinters[0], groupedByLinters[1]);
 			},
 			{
 				ignoreLint: async (hash: string) => {
@@ -87,7 +117,8 @@
 						if (!lfw) {
 							return;
 						}
-						await linter.ignoreLintHash(BigInt(hash));
+
+						await Promise.all(linters.map((l) => l.ignoreLintHash(BigInt(hash))));
 						console.log(`Ignored ${hash}`);
 						// Re-run linting to hide ignored lint immediately
 						lfw.update();
@@ -104,8 +135,8 @@
 
 		try {
 			await tick();
-			await linter.setup();
-			await linter.lint(content);
+			await Promise.all(linters.map((l) => l.setup()));
+			await Promise.all(linters.map((l) => l.lint(content)));
 		} catch (error) {
 			console.error("Failed to initialize linter", error);
 		}
@@ -127,7 +158,7 @@
 		}
 
 		//
-		if (linter != null && quill != null) {
+		if (linters.every((l) => l != null) && quill != null) {
 			if (!readySent) {
 				readySent = true;
 				onReady();

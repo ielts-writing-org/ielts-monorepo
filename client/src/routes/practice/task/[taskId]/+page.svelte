@@ -3,7 +3,7 @@
 	import ChatPanel from "$lib/features/chat/ChatPanel.svelte";
 	import EvaluationPanel from "$lib/features/evaluation/EvaluationPanel.svelte";
 	import { Lightbulb, Pilcrow } from "@lucide/svelte";
-	import { Dialect, LocalLinter } from "harper.js";
+	import { Dialect, WorkerLinter } from "harper.js";
 	import { onDestroy, onMount } from "svelte";
 
 	const { data } = $props();
@@ -12,14 +12,15 @@
 		taskPrompt: "",
 		taskResponse: ""
 	});
-	let linter = $state<LocalLinter>();
+	const linters = $state<Array<WorkerLinter>>([]);
 	let isDirty = $state<boolean>(true);
 
 	onMount(async () => {
 		taskState = { taskPrompt: data.topic, taskResponse: data.response };
 
 		const { binary } = await import("harper.js/binary");
-		linter = new LocalLinter({ binary, dialect: Dialect.American });
+		linters.push(new WorkerLinter({ binary, dialect: Dialect.American }));
+		linters.push(new WorkerLinter({ binary, dialect: Dialect.British }));
 	});
 
 	beforeNavigate(({ cancel }) => {
@@ -29,7 +30,7 @@
 	});
 
 	onDestroy(() => {
-		linter?.dispose();
+		linters.forEach((l) => l.dispose());
 	});
 </script>
 
@@ -47,7 +48,7 @@
 				<Lightbulb size="1em" class="inline text-primary" />
 				<div class="inline font-bold text-primary uppercase">Task</div>
 			</div>
-			{#if linter}
+			{#if linters.length}
 				{let isReady = $state<boolean>(false)}
 				{#if !isReady}
 					<div class="flex h-full max-w-full flex-col items-center justify-center gap-2">
@@ -57,7 +58,7 @@
 				{/if}
 				{#await import("$lib/features/harper-editor/Editor.svelte") then { default: Editor }}
 					<Editor
-						{linter}
+						{linters}
 						content={taskState.taskPrompt}
 						onReady={() => (isReady = true)}
 						onChange={(v) => (taskState.taskPrompt = v)} />
@@ -70,7 +71,7 @@
 				<Pilcrow size="1em" class="inline align-text-bottom text-primary" />
 				<div class="inline font-bold text-primary uppercase">Your response</div>
 			</div>
-			{#if linter}
+			{#if linters.length}
 				{let isReady = $state<boolean>(false)}
 				{#if !isReady}
 					<div class="flex h-full flex-col items-center justify-center gap-2">
@@ -80,7 +81,7 @@
 				{/if}
 				{#await import("$lib/features/harper-editor/Editor.svelte") then { default: Editor }}
 					<Editor
-						{linter}
+						{linters}
 						content={taskState.taskResponse}
 						onReady={() => (isReady = true)}
 						onChange={(v) => (taskState.taskResponse = v)} />

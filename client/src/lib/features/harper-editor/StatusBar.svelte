@@ -37,8 +37,7 @@
 	aria-label="Editor status">
 	<div class="inline-flex items-center gap-2">
 		<span class="inline-flex items-center gap-1.5">
-			<span class={`h-1.5 w-1.5 rounded-full ${problemCount === 0 ? "bg-success" : "bg-error"}`}>
-			</span>
+			<span class={["status", problemCount === 0 ? "status-success" : "status-error"]}> </span>
 			{#if problemCount === 0}
 				All clear
 			{:else}

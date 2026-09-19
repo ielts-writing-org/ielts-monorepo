@@ -61,8 +61,8 @@
 		return Object.fromEntries(
 			Object.keys(o1).map((key) => [
 				key,
-				key === "SpellCheck" || key === "Regionalisms"
-					? o1[key].filter((x) => o2[key].includes(x))
+				["SpellCheck", "Regionalisms"].includes(key)
+					? o1[key].filter((x) => o2[key].map((m) => m.context_hash).includes(x.context_hash))
 					: [
 							...o1[key],
 							...o2[key].filter((x) => !o1[key].map((m) => m.context_hash).includes(x.context_hash))

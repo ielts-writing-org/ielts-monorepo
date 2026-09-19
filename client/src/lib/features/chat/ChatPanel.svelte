@@ -40,6 +40,9 @@ import { z } from "zod";
 			const stream = await api.send(chatContext);
 			const reader = stream.pipeThrough(new EventSourceParserStream()).getReader();
 
+			chatHistory.push({ role: "user", content: chatInput });
+			chatInput = "";
+
 			response = "";
 			while (true) {
 				const { done, value } = await reader.read();
@@ -122,10 +125,11 @@ import { z } from "zod";
 			return;
 		}
 
-		chatHistory.push({ role: "user", content: chatInput });
-		chatInput = "";
-
-		const chatRequest = createChatRequest(taskContext, chatHistory, taskId);
+		const chatRequest = createChatRequest(
+taskContext,
+			[...chatHistory, { role: "user", content: chatInput }],
+taskId
+);
 		await executeChat(chatRequest);
 	};
 </script>
@@ -166,11 +170,17 @@ import { z } from "zod";
 
 	<form class="join">
 		<label class="input join-item flex-1">
-			<input type="text" placeholder="Ask a question..." required bind:value={chatInput} />
+			<input
+type="text"
+placeholder="Ask a question..."
+required
+					disabled={isExecuting}
+bind:value={chatInput} />
 		</label>
 		<button class="btn join-item btn-primary" disabled={isExecuting} onclick={handleChatSubmit}>
-			<span class="hidden sm:inline">Send</span>
-			<Send size="1em" />
+<span class="loading loading-sm loading-dots" hidden={!isExecuting}></span>
+			<span class="hidden sm:inline" hidden={isExecuting}>Send</span>
+			<Send class={[isExecuting && "hidden"]} size="1em" />
 		</button>
 	</form>
 </div>

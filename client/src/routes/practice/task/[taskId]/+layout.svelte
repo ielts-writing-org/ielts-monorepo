@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { resolve } from "$app/paths";
-	import ErrorModal from "$lib/shared/error/ErrorModal.svelte";
+	import ErrorModal from "$lib/core/error/ErrorModal.svelte";
 	import ThemeToggle from "$lib/features/theme/ThemeToggle.svelte";
 	import { ArrowLeft } from "@lucide/svelte";
 	import { page } from "$app/state";

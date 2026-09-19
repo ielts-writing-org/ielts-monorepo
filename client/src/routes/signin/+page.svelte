@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { authClient } from "$lib/shared/auth-client";
+	import { authClient } from "$lib/features/auth/auth-client";
 
 	const handleSignInWithGitHub = async () => {
 		await authClient.signIn.social({

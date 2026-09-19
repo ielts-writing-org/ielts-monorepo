@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { isCriteriaKey } from "$lib/features/evaluation/utils";
-	import { errorModal } from "$lib/shared/error/ErrorModal.svelte";
+	import { errorModal } from "$lib/core/error/ErrorModal.svelte";
 	import { ListChecks } from "@lucide/svelte";
 	import JSONParser from "@streamparser/json/jsonparser.js";
 	import { EventSourceParserStream } from "eventsource-parser/stream";

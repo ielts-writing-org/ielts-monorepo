@@ -1,4 +1,4 @@
-import { authClient } from "$lib/shared/auth-client";
+import { authClient } from "$lib/features/auth/auth-client";
 import { type Handle } from "@sveltejs/kit";
 
 export const handle: Handle = async ({ event, resolve }) => {

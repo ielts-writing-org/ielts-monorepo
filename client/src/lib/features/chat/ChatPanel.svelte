@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { errorModal } from "$lib/shared/error/ErrorModal.svelte";
+	import { errorModal } from "$lib/core/error/ErrorModal.svelte";
 	import { MessagesSquare, Send } from "@lucide/svelte";
 	import { EventSourceParserStream } from "eventsource-parser/stream";
 	import { marked } from "marked";

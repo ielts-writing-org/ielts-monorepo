@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { invalidateAll } from "$app/navigation";
 	import { resolve } from "$app/paths";
-	import { authClient } from "$lib/shared/auth-client.js";
+	import { authClient } from "$lib/features/auth/auth-client.js";
 
 	let { children, data } = $props();
 

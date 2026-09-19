@@ -9,7 +9,7 @@
 		EvaluationResponse
 	} from "ielts-shared/schemas/evaluation-response";
 	import { EvaluationApi } from "./api";
-	import { ZodError } from "zod";
+	import { z } from "zod";
 
 	type EvaluationPanelProps = {
 		taskId: number;
@@ -73,12 +73,26 @@
 				parser.write(JSON.parse(value.data).choices?.[0]?.delta?.content ?? "");
 			}
 		} catch (e) {
-			if (e instanceof ZodError) {
-				console.log(e);
+			if (e instanceof z.ZodError) {
+				const zodErrors = z.flattenError(e);
+				if (zodErrors.formErrors.length) {
+					errorModal?.showError({
+						title: "Validation error",
+						message: zodErrors.formErrors[0]
+					});
+				} else if (Object.entries(zodErrors.fieldErrors).length) {
+					errorModal?.showError({
+						title: "Validation error",
+						message: Object.values<string[]>(zodErrors.fieldErrors)[0][0]
+					});
+				}
+			} else {
+				errorModal?.showError({
+					title: "Unable to run evaluation",
+					message: String(e)
+				});
 			}
 
-			errorModal?.setErrorMessage(e instanceof Error ? e.message : String(e));
-			errorModal?.showErrorModal();
 			reponse = undefined;
 		} finally {
 			isExecuting = false;

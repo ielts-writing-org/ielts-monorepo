@@ -1,7 +1,8 @@
 <script lang="ts" module>
+	type Error = { title: string; message: string };
+
 	type ErrorModalController = {
-		setErrorMessage: (message: string) => void;
-		showErrorModal: () => void;
+		showError: (error: Error) => void;
 	};
 
 	export let errorModal: ErrorModalController | undefined;
@@ -21,31 +22,73 @@
 	import { onMount } from "svelte";
 
 	let modal = $state<HTMLDialogElement>();
-	let errorMessage = $state<string>("");
+	let error = $state<Error>();
+	const errorQueue = $state<Array<Error>>([]);
 
-	function setErrorMessage(message: string) {
-		errorMessage = message;
+	function showError(error: Error) {
+		console.log(error);
+		errorQueue.push(error);
+
+		if (modal?.open) {
+			return;
+		}
+
+		handleOpen();
 	}
 
-	function showErrorModal() {
+	function waitForTransition(element: HTMLElement): Promise<void> {
+		return new Promise((resolve) => {
+			element.addEventListener("transitionend", () => resolve(), {
+				once: true
+			});
+		});
+	}
+
+	function handleOpen() {
+		const lastMessage = errorQueue.pop();
+		if (!lastMessage) {
+			return;
+		}
+
+		error = lastMessage;
 		modal?.showModal();
 	}
 
-	onMount(() =>
-		register({
-			setErrorMessage,
-			showErrorModal
-		})
-	);
+	async function handleClose(
+		e: MouseEvent & {
+			currentTarget: EventTarget & HTMLButtonElement;
+		}
+	) {
+		e.preventDefault();
+		modal?.requestClose();
+
+		await waitForTransition(modal!);
+
+		handleOpen();
+	}
+
+	onMount(() => {
+		const unregister = register({
+			showError
+		});
+
+		if (errorQueue.length) {
+			handleOpen();
+		}
+
+		return unregister;
+	});
 </script>
 
 <dialog class="modal" bind:this={modal}>
 	<div class="modal-box">
-		<h3 class="text-lg font-bold">Error during evaluation</h3>
-		<p class="py-4">{errorMessage ?? "There was an error during the process."}</p>
+		<h3 class="text-lg font-bold">{error?.title ?? "Error"}</h3>
+		<p class="py-4">
+			{error?.message ?? "There was an expected error during the process."}
+		</p>
 		<div class="modal-action">
 			<form method="dialog">
-				<button class="btn">Close</button>
+				<button class="btn" onclick={handleClose}>Close</button>
 			</form>
 		</div>
 	</div>

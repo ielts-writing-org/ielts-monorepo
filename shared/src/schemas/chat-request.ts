@@ -7,14 +7,14 @@ export const ChatContextRequestSchema = z.object({
 	context: z.discriminatedUnion("taskId", [
 		z.object({
 			taskId: z.literal(1),
-			taskPrompt: z.string().trim().min(1),
-			taskImage: z.string().trim().min(1),
-			responseText: z.string().trim().min(1)
+			taskPrompt: z.string(),
+			taskImage: z.string(),
+			responseText: z.string()
 		}),
 		z.object({
 			taskId: z.literal(2),
-			taskPrompt: z.string().trim().min(1),
-			responseText: z.string().trim().min(1)
+			taskPrompt: z.string(),
+			responseText: z.string()
 		})
 	])
 });
@@ -22,7 +22,10 @@ export const ChatContextRequestSchema = z.object({
 export const ChatContentRequestSchema = z.object({
 	role: z.enum(["user", "assistant"]),
 	type: z.literal("content"),
-	content: z.string().trim().min(1)
+	content: z
+		.string()
+		.trim()
+		.min(1, { error: (i) => `Chat content must have atleast ${i.minimum.toString()} character` })
 });
 
 export const ChatRequestSchema = z.object({

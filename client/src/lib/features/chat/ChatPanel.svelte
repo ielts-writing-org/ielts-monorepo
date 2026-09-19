@@ -5,6 +5,7 @@
 	import { marked } from "marked";
 	import { ChatApi } from "./api";
 	import type { ChatRequest } from "ielts-shared/schemas/chat-request";
+import { z } from "zod";
 
 	type ChatPanelProps = {
 		// TODO: Add evaluations if existed
@@ -51,8 +52,25 @@
 				chatHistory.push({ role: "assistant", content: response });
 			}
 		} catch (e) {
-			errorModal?.setErrorMessage(e instanceof Error ? e.message : String(e));
-			errorModal?.showErrorModal();
+			if (e instanceof z.ZodError) {
+				const zodErrors = z.flattenError(e);
+				if (zodErrors.formErrors.length) {
+					errorModal?.showError({
+						title: "Validation error",
+						message: zodErrors.formErrors[0]
+					});
+				} else if (Object.entries(zodErrors.fieldErrors).length) {
+					errorModal?.showError({
+						title: "Validation error",
+						message: Object.values<string[]>(zodErrors.fieldErrors)[0][0]
+					});
+				}
+			} else {
+				errorModal?.showError({
+					title: "Unable to chat",
+					message: String(e)
+				});
+			}
 		} finally {
 			isExecuting = false;
 		}

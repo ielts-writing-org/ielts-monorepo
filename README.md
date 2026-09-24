@@ -13,6 +13,32 @@ In conclusion, the platform aims to make writing practice more interactive, resp
 1. NodeJS Runtime >=18.0.0.
 2. A Cloudflare account.
 
+## Server environment variables
+
+| Variable             | Value                   |
+| -------------------- | ----------------------- |
+| CORS_ORIGINS         | <http://localhost:5173> |
+| BETTER_AUTH_URL      | <http://localhost:8787> |
+| BETTER_AUTH_SECRET   |                         |
+| BETTER_AUTH_API_KEY  |                         |
+| GITHUB_CLIENT_ID     |                         |
+| GITHUB_CLIENT_SECRET |                         |
+
+## Client environment variables
+
+| Variable          | Value                   |
+| ----------------- | ----------------------- |
+| PUBLIC_SERVER_URL | <http://localhost:8787> |
+
+## Server KV entries
+
+| Namespace | Key               | Description                                        |
+| --------- | ----------------- | -------------------------------------------------- |
+| TASK1_KV  | chat-prompt       | The chat prompt to use when chat with AI           |
+| TASK1_KV  | evaluation-prompt | The evaluation prompt to use when evaluate with AI |
+| TASK2_KV  | chat-prompt       | The chat prompt to use when chat with AI           |
+| TASK2_KV  | evaluation-prompt | The evaluation prompt to use when evaluate with AI |
+
 ## How to run the local development server
 
 1. Clone this repo.
@@ -30,32 +56,6 @@ In conclusion, the platform aims to make writing practice more interactive, resp
 
 4. Follow each terminal's returns to continue.
 
-## Server environment variables
-
-| Variable             | Value                   |
-| -------------------- | ----------------------- |
-| BETTER_AUTH_URL      | <http://localhost:8787> |
-| BETTER_AUTH_SECRET   |                         |
-| BETTER_AUTH_API_KEY  |                         |
-| GITHUB_CLIENT_ID     |                         |
-| GITHUB_CLIENT_SECRET |                         |
-| CORS_ORIGINS         | <http://localhost:5173> |
-
-## Client environment variables
-
-| Variable          | Value                   |
-| ----------------- | ----------------------- |
-| PUBLIC_SERVER_URL | <http://localhost:8787> |
-
-## Server KV entries
-
-| Namespace | Key               | Description                                        |
-| --------- | ----------------- | -------------------------------------------------- |
-| TASK1_KV  | chat-prompt       | The chat prompt to use when chat with AI           |
-| TASK1_KV  | evaluation-prompt | The evaluation prompt to use when evaluate with AI |
-| TASK2_KV  | chat-prompt       | The chat prompt to use when chat with AI           |
-| TASK2_KV  | evaluation-prompt | The evaluation prompt to use when evaluate with AI |
-
 ## Root Endpoints
 
 Base:
@@ -63,11 +63,12 @@ Base:
 - <http://localhost:8787>
 - <http://127.0.0.1:8787>
 
-| No  | Endpoint    | Method | Description                      | Dev? |
-| --- | ----------- | ------ | -------------------------------- | :--: |
-| 1   | /           | GET    | Application's health             |      |
-| 2   | /api        | Any    | API Routes (BetterAuth included) |      |
-| 2   | /api/health | GET    | Application's health             |      |
-| 3   | /openapi    | GET    | OpenAPI docs (JSON)              |  x   |
-| 4   | /scalar     | GET    | ScalarUI                         |  x   |
-| 4   | /migrate    | POST   | Migrate database                 |  x   |
+| No  | Endpoint          | Method | Description          |
+| --- | ----------------- | ------ | -------------------- |
+| 1   | /                 | GET    | Application's health |
+| 2   | /api/*            | Any    | API Routes           |
+| 2   | /api/health       | GET    | Application's health |
+| 4   | /api/auth         | ANY    | BetterAuth handled   |
+| 4   | /api/auth/migrate | POST   | Migrate database     |
+| 3   | /api/openapi      | GET    | OpenAPI docs         |
+| 4   | /scalar           | GET    | ScalarUI             |

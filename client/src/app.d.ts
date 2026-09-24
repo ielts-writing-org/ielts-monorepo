@@ -6,6 +6,7 @@ declare global {
 		interface Locals {
 			session: import("better-auth").Session | undefined;
 			user: import("better-auth").User | undefined;
+			theme: "light" | "emerald" | "nord" | "winter" | "dark" | "abyss" | "forest" | "night";
 		}
 		// interface PageData {}
 		// interface PageState {}

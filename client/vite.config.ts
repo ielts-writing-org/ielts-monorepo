@@ -2,6 +2,7 @@ import adapter from "@sveltejs/adapter-auto";
 import { sveltekit } from "@sveltejs/kit/vite";
 import tailwindcss from "@tailwindcss/vite";
 import { playwright } from "@vitest/browser-playwright";
+import path from "node:path";
 import { defineConfig } from "vitest/config";
 
 export default defineConfig({
@@ -20,6 +21,11 @@ export default defineConfig({
 			adapter: adapter()
 		})
 	],
+	resolve: {
+		alias: {
+			"@": path.resolve(import.meta.dirname, "../server/src")
+		}
+	},
 	test: {
 		expect: { requireAssertions: true },
 		projects: [
@@ -36,7 +42,6 @@ export default defineConfig({
 					exclude: ["src/lib/server/**"]
 				}
 			},
-
 			{
 				extends: "./vite.config.ts",
 				test: {
@@ -46,6 +51,9 @@ export default defineConfig({
 					exclude: ["src/**/*.svelte.{test,spec}.{js,ts}"]
 				}
 			}
-		]
+		],
+		alias: {
+			"@": path.resolve(import.meta.dirname, "../server/src")
+		}
 	}
 });

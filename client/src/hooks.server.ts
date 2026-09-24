@@ -1,27 +1,39 @@
-import { authClient } from "$lib/features/auth/auth-client";
+import { authClient } from "$lib/clients/auth/auth-client";
 import { type Handle } from "@sveltejs/kit";
+import { sequence } from "@sveltejs/kit/hooks";
 
-export const handle: Handle = async ({ event, resolve }) => {
-	try {
-		const session = await authClient.getSession({
-			fetchOptions: {
-				headers: event.request.headers
+const ignoreAuthPaths = ["/favicon.ico"];
+
+const authHandle: Handle = async ({ event, resolve }) => {
+	if (!ignoreAuthPaths.includes(event.url.pathname)) {
+		try {
+			const session = await authClient.getSession({
+				fetchOptions: {
+					headers: event.request.headers
+				}
+			});
+
+			if (session) {
+				event.locals.session = session.data?.session;
+				event.locals.user = session.data?.user;
 			}
-		});
-
-		if (session) {
-			event.locals.session = session.data?.session;
-			event.locals.user = session.data?.user;
+		} catch {
+			throw new Error("Unable to contact remote server");
 		}
-	} catch {
-		throw new Error("Unable to contact remote server");
 	}
 
-	const theme = event.cookies.get("theme");
-
-	const response = await resolve(event, {
-		transformPageChunk: ({ html }) => html.replace("%theme%", theme ?? "light")
-	});
-
-	return response;
+	return await resolve(event);
 };
+
+const themeHandle: Handle = async ({ event, resolve }) => {
+	const theme = (event.cookies.get("theme") ?? "light") as
+		"light" | "emerald" | "nord" | "winter" | "dark" | "abyss" | "forest" | "night";
+
+	event.locals.theme = theme;
+
+	return await resolve(event, {
+		transformPageChunk: ({ html }) => html.replace("%theme%", theme)
+	});
+};
+
+export const handle = sequence(authHandle, themeHandle);

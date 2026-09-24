@@ -18,22 +18,6 @@
 	@apply scrollbar-thin;
 }
 
-.harper-editor {
-	--harper-editor-font-size: inherit;
-}
-
-.harper-editor *,
-.harper-editor *::before,
-.harper-editor *::after {
-	box-sizing: border-box;
-}
-
-.harper-editor button,
-.harper-editor input,
-.harper-editor select {
-	font: inherit;
-}
-
 .harper-editor button:not(:disabled) {
 	cursor: pointer;
 }
@@ -44,7 +28,7 @@
 
 .harper-editor button:focus-visible,
 .harper-editor select:focus-visible {
-	@apply outline-offset-2 outline-2 outline-primary;
+	@apply outline-2 outline-primary;
 }
 
 .harper-editor-quill-container {

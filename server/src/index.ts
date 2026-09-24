@@ -1,40 +1,45 @@
-import { inferdiHono } from "@inferdi/hono";
+import type { InferdiHonoScopeEnv } from "@inferdi/hono";
+import { Hono } from "hono";
+import { basicAuth } from "hono/basic-auth";
 import { cors } from "hono/cors";
-import appFactory from "./app-factory";
-import { buildRootContainer } from "./container";
-import { toErrorResponse } from "./core/error-handling/errors";
-import authRoute from "./features/auth/route";
-import chatRoute from "./features/chat/route";
-import evaluationRoute from "./features/evaluation/route";
-import openAPIHandler from "./features/openapi/openapi-handler";
-import scalarHandler from "./features/scalar/scalar-handler";
+import { logger } from "hono/logger";
+import { inferdi } from "./container";
+import type { RequestScope } from "./container";
+import { createOpenAPIHandler } from "./openapi.handler";
+import { createScalarHandler } from "./scalar.handler";
+import type { auth } from "@/auth";
+import { authRoute } from "@/features/auth/auth.route";
+import { chatRoute } from "@/features/chat/chat.route";
+import { evaluationRoute } from "@/features/evaluation/evaluation.route";
 
-const root = buildRootContainer();
-const app = appFactory.createApp();
+export type AppEnv = {
+	Bindings: CloudflareBindings;
+	Variables: {
+		session: typeof auth.$Infer.Session | null;
+	};
+} & InferdiHonoScopeEnv<RequestScope>;
 
-app.onError((error, c) => {
-	// TODO: Improve error handling
-	const { status, body } = toErrorResponse(error);
-	return c.json(body, status);
-});
-
+const app = new Hono<AppEnv>();
+app.use(logger());
 app.use(
 	"*",
 	cors({
-		origin: process.env.CORS_ORIGINS.split(","),
+		origin: (process.env.CORS_ORIGINS || "").split(","),
 		credentials: true
 	})
 );
-app.use("*", inferdiHono({ container: root }));
+app.use("*", inferdi);
 
-app.get("/:path{(\api\/health)?}", (c) => c.json({ status: "ok" }));
+app.use(
+	"/:path{(api/openapi|scalar)}",
+	basicAuth({ username: "admin", password: process.env.BETTER_AUTH_API_KEY })
+);
+app.get("/api/openapi", createOpenAPIHandler(app));
+app.get("/scalar", createScalarHandler());
+
+app.get("/:path{(api/health)?}", (c) => c.json({ status: "ok" }));
 
 app.route("/", authRoute);
-
-if (process.env.NODE_ENV === "development") {
-	app.get("/openapi", openAPIHandler(app));
-	app.get("/scalar", scalarHandler());
-}
 app.route("/api/evaluation", evaluationRoute);
 app.route("/api/chat", chatRoute);
 

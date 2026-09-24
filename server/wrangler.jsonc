@@ -2,7 +2,7 @@
 	"$schema": "../node_modules/wrangler/config-schema.json",
 	"name": "ielts-server",
 	"main": "src/index.ts",
-	"compatibility_date": "2026-08-15",
+	"compatibility_date": "2026-09-24",
 	"compatibility_flags": ["nodejs_compat"],
 	"env": {
 		"development": {
@@ -18,9 +18,6 @@
 			}
 		}
 	},
-	// "vars": {
-	//   "MY_VAR": "my-variable"
-	// },
 	"kv_namespaces": [
 		{
 			"binding": "TASK1_KV",
@@ -47,5 +44,11 @@
 	"ai": {
 		"binding": "AI",
 		"remote": true
+	},
+	"images": {
+		"binding": "IMAGES"
+	},
+	"cache": {
+		"enabled": true
 	}
 }

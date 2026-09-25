@@ -66,7 +66,7 @@
 </script>
 
 <svelte:head>
-	<title>Task {data.task.id} | IELTS Writing</title>
+	<title>Task {data.task.id} | IELTS Writing Practice Platform</title>
 	<meta name="description" content={data.pageTitle} />
 </svelte:head>
 
@@ -140,7 +140,7 @@
 	<aside class="top-0 basis-md overflow-y-auto lg:sticky lg:flex-1">
 		<div role="tablist" class="tabs tabs-lift h-full">
 			<label class="tab [--tab-border-color:var(--color-base-content)]/20">
-				<input type="radio" name="tab" aria-label="Tab Evaluation" defaultChecked role="tab" />
+				<input type="radio" name="tab" aria-label="Tab Evaluation" role="tab" defaultChecked />
 				Evaluation
 			</label>
 			<div class="tab-content border-base-content/20">

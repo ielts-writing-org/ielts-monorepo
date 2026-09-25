@@ -1,27 +1,45 @@
 <script lang="ts">
+	import { resolve } from "$app/paths";
 	import { authClient } from "$lib/clients/auth/auth-client";
 
+	let isSigning = $state<boolean>(false);
+
 	const handleSignInWithGitHub = async () => {
-		await authClient.signIn.social({
+		isSigning = true;
+
+		const data = await authClient.signIn.social({
 			provider: "github",
 			callbackURL: window.location.origin
 		});
+
+		if (data.error) {
+			isSigning = false;
+		}
 	};
 </script>
 
 <svelte:head>
-	<title>Sign in | IELTS Writing</title>
+	<title>Sign in | IELTS Writing Practice Platform</title>
+	<meta name="description" content="IELTS Writing Practice Platform Sign In" />
 </svelte:head>
 
-<div class="flex min-h-screen w-full items-center justify-center bg-base-300">
-	<div class="flex w-full max-w-sm flex-col items-center gap-6 rounded-xl bg-white p-8 shadow-sm">
+<div class="relative flex h-screen w-full items-center justify-center bg-base-300">
+	<!-- Watermark -->
+	<div class="absolute inset-0 bg-base-content/20 mask-[url('/watermark.svg')]"></div>
+	<!-- Content -->
+	<div
+		class="z-1 flex w-full max-w-sm flex-col items-center gap-6 rounded-xl bg-base-100 p-8 shadow-sm"
+		data-theme="light">
 		<div class="flex flex-col items-center gap-4">
 			<span
 				class="grid h-10 w-10 place-items-center rounded-lg bg-primary text-sm font-extrabold text-primary-content">
 				AI
 			</span>
 			<div class="text-center">
-				<h1 class="text-xl font-bold text-neutral">Welcome to IELTS Writing</h1>
+				<h1 class=" text-neutral">
+					<span class="block">Welcome to</span>
+					<span class="block text-xl font-bold">IELTS Writing Practice Platform</span>
+				</h1>
 				<p class="text-sm text-neutral">Sign in to continue to your IELTS Academic AI Tutor</p>
 			</div>
 		</div>
@@ -29,6 +47,7 @@
 		<button
 			type="button"
 			class="btn btn-wide btn-outline btn-neutral"
+			disabled={isSigning}
 			onclick={handleSignInWithGitHub}>
 			<svg
 				xmlns="http://www.w3.org/2000/svg"
@@ -44,7 +63,11 @@
 			Continue with GitHub
 		</button>
 		<p class="text-center text-xs text-neutral/75">
-			By signing in, you agree to our Terms of Service and Privacy Policy.
+			By signing in, you agree to our
+			<span class="block">
+				<a class="link" href={resolve("/")}>Terms of Service</a> and
+				<a class="link" href={resolve("/")}>Privacy Policy</a>.
+			</span>
 		</p>
 	</div>
 </div>

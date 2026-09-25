@@ -2,234 +2,177 @@
 	import { resolve } from "$app/paths";
 	import { ArrowRight, Check, ChevronRight, Clock3, MessageCircle, Sparkles } from "@lucide/svelte";
 
-	const sessions = [
-		{
-			task: "Task 2",
-			title: "Opinion: Remote Working Impact",
-			meta: "Yesterday",
-			area: "Task Response",
-			band: "6.5"
-		},
-		{
-			task: "Task 1",
-			title: "Bar Chart: Energy Consumption",
-			meta: "3 days ago",
-			area: "Grammar Range",
-			band: "7.0"
-		},
-		{
-			task: "Task 2",
-			title: "Discussion: University Tuition Fees",
-			meta: "5 days ago",
-			area: "Coherence",
-			band: "6.5"
-		}
-	];
-
-	const criteria = [
-		{
-			name: "Task Response / Achievement",
-			direction: "up",
-			score: "6.5",
-			bar: "w-[73%] bg-[#5a50ea]",
-			scoreColor: "text-[#5045eb]",
-			note: "Main idea clear; expand supporting arguments."
-		},
-		{
-			name: "Coherence & Cohesion",
-			direction: "steady",
-			score: "7.0",
-			bar: "w-[78%] bg-[#8841ea]",
-			scoreColor: "text-[#5045eb]",
-			note: "Logical paragraphing; diverse linking words."
-		},
-		{
-			name: "Lexical Resource",
-			direction: "up",
-			score: "7.0",
-			bar: "w-[78%] bg-[#07966e]",
-			scoreColor: "text-[#039b78]",
-			note: "Good academic collocations; reduce repetition."
-		},
-		{
-			name: "Grammar Range & Accuracy",
-			direction: "up",
-			score: "6.0",
-			bar: "w-[60%] bg-[#e58600]",
-			scoreColor: "text-[#e68500]",
-			note: "Accurate simple sentences; watch comma splices."
-		}
-	];
+	const { data } = $props();
 </script>
 
 <svelte:head>
-	<title>Dashboard | IELTS Writing</title>
-	<meta name="description" content="IELTS Writing practice dashboard" />
+	<title>Dashboard | IELTS Writing Practice Platform</title>
+	<meta name="description" content="IELTS Writing Practice Platform Dashboard" />
 </svelte:head>
 
-<main class="w-full px-3 py-4 sm:px-6 sm:py-6 lg:px-9">
+<main class="w-full px-3 py-3 sm:px-4 sm:py-4 lg:px-9">
 	<section
-		class="flex min-h-24.5 w-full flex-col items-start justify-between gap-4 rounded-xl border border-[#cbd3ff] bg-white px-4 py-3 sm:flex-row sm:items-center sm:px-5"
+		class="flex min-h-24.5 w-full flex-col items-start justify-between gap-4 rounded-box border border-base-content/20 bg-base-100 px-4 py-3 hover:border-primary sm:flex-row sm:items-center sm:px-5"
 		aria-label="Recommended practice">
 		<div class="min-w-0">
-			<div class="flex flex-wrap items-center gap-2 text-[10px] font-bold text-[#6c7890]">
-				<span class="rounded bg-[#eef0ff] px-1.5 py-1 text-[9px] text-[#5861eb]">
-					RECOMMENDED FOR YOU
-				</span>
-				<b>
-					Focus Area: Task Response <i class="mx-1 text-[#b8c0ce] not-italic">•</i>
+			<div class="flex flex-wrap items-center gap-2 text-xs font-semibold">
+				<span class="badge badge-soft badge-sm badge-primary">RECOMMENDED FOR YOU</span>
+				<span class="font-semibold text-base-content/75">
+					Focus Area: Task Response <span class="mx-1">•</span>
 					Est. 40 min
-				</b>
+				</span>
 			</div>
-			<h1 class="my-1.5 font-bold">Task 2 - Opinion Essay: Community Service in High School</h1>
-			<p class="max-w-3xl text-xs leading-[1.4] text-[#66738a]">
-				“Your recent essays demonstrate strong lexical range (Band 7.0), but your arguments need
-				deeper explanation and concrete examples to reach Band 7.5+ in Task Response.”
+			<h1 class="my-1.5 font-semibold">Task 2 - Opinion Essay: Community Service in High School</h1>
+			<p class="max-w-3xl text-xs text-base-content/75">
+				Your recent essays demonstrate strong lexical range (Band 7.0), but your arguments need
+				deeper explanation and concrete examples to reach Band 7.5+ in Task Response.
 			</p>
 		</div>
-		<button
-			class="inline-flex min-h-9.5 shrink-0 items-center justify-center gap-1 rounded-lg bg-[#5146e8] px-4 text-xs font-extrabold text-white">
-			Practice this task <ArrowRight size={15} strokeWidth={2.5} />
+		<button class="btn btn-primary">
+			Practice this task
+			<ArrowRight size="1em" />
 		</button>
 	</section>
 
-	<div class="my-6 flex flex-col gap-2 sm:flex-row sm:items-baseline sm:justify-between">
-		<h2 class="text-[15px] font-bold">What do you want to practice?</h2>
-		<span class="text-xs text-[#79859a]">Select an IELTS Writing format to begin</span>
+	<div class="my-4 flex flex-col gap-2 sm:flex-row sm:items-baseline sm:justify-between">
+		<h2 class="font-semibold">What do you want to practice?</h2>
+		<span class="text-xs text-base-content/75">Select an IELTS Writing format to begin</span>
 	</div>
-	<section class="grid w-full grid-cols-1 gap-5 xl:grid-cols-[minmax(0,1.55fr)_minmax(320px,1fr)]">
+
+	<section class="grid w-full grid-cols-1 gap-4 xl:grid-cols-[minmax(0,1.55fr)_minmax(320px,1fr)]">
 		<div class="grid grid-cols-1 gap-3.5 md:grid-cols-2">
 			<article
-				class="flex min-h-75 flex-col overflow-hidden rounded-xl border border-base-100 bg-base-100 p-4 hover:border-primary">
-				<div class="flex justify-between gap-1.5 text-xs font-bold text-[#6f7e93]">
-					<span class="rounded bg-[#f0f2ff] px-1.5 py-1 text-primary"> TASK 1 </span>
-					<span class="flex items-center gap-1">
-						<Clock3 size={12} /> 20 mins • min 150 words
+				class="flex min-h-60 flex-col overflow-hidden rounded-box border border-base-content/20 bg-base-100 p-4 hover:border-primary">
+				<div class="flex justify-between gap-1.5 text-xs">
+					<span class="badge rounded-box badge-soft badge-sm font-semibold badge-primary">
+						TASK 1
+					</span>
+					<span class="flex items-center gap-1 text-base-content/75">
+						<Clock3 size="1em" />
+						20 mins • min 150 words
 					</span>
 				</div>
-				<h3 class="my-3 text-sm font-bold">Academic Visual Report</h3>
-				<p class="mb-2 truncate text-xs text-[#69768b]">
+				<h3 class="mt-3 font-semibold">Academic Visual Report</h3>
+				<p class="mb-3 truncate text-xs text-base-content/75">
 					Summarize, describe, or explain visual data. Present an overview.
 				</p>
-				<strong class="mb-1 text-xs text-[#7a879b]">Supported Visual Types:</strong>
+				<span class="mb-1 text-xs font-semibold text-base-content/75">Supported Visual Types:</span>
 				<div class="flex flex-wrap gap-1.5">
-					<div class="badge rounded-xs badge-soft badge-xs">Line Graph</div>
-					<div class="badge rounded-xs badge-soft badge-xs">Bar Chart</div>
-					<div class="badge rounded-xs badge-soft badge-xs">Pie Chart</div>
-					<div class="badge rounded-xs badge-soft badge-xs">Table</div>
-					<div class="badge rounded-xs badge-soft badge-xs">Process Diagram</div>
-					<div class="badge rounded-xs badge-soft badge-xs">Map Comparison</div>
-					<div class="badge rounded-xs badge-soft badge-xs">Multiple Visuals</div>
+					<div class="badge badge-soft badge-xs">Line Graph</div>
+					<div class="badge badge-soft badge-xs">Bar Chart</div>
+					<div class="badge badge-soft badge-xs">Pie Chart</div>
+					<div class="badge badge-soft badge-xs">Table</div>
+					<div class="badge badge-soft badge-xs">Process Diagram</div>
+					<div class="badge badge-soft badge-xs">Map Comparison</div>
+					<div class="badge badge-soft badge-xs">Multiple Visuals</div>
 				</div>
-				<a class="btn mt-auto btn-primary" href={resolve("/practice/task/1")}>
+				<a class="btn mt-auto btn-outline btn-primary" href={resolve("/practice/task/1")}>
 					Start Task 1 Practice
+					<ArrowRight size="1em" />
 				</a>
 			</article>
 
 			<article
-				class="flex min-h-75 flex-col overflow-hidden rounded-xl border border-base-100 bg-base-100 p-3.75 hover:border-primary">
-				<div class="flex justify-between gap-1.5 text-xs font-bold text-[#6f7e93]">
-					<span class="rounded bg-[#f0f2ff] px-1.5 py-1 text-primary"> TASK 2 </span>
-					<span class="flex items-center gap-1">
-						<Clock3 size={12} /> 40 mins • min 250 words
+				class="flex min-h-60 flex-col overflow-hidden rounded-box border border-base-content/20 bg-base-100 p-3.75 hover:border-primary">
+				<div class="flex justify-between gap-1.5 text-xs">
+					<span class="badge rounded-box badge-soft badge-sm font-semibold badge-primary">
+						TASK 2
+					</span>
+					<span class="flex items-center gap-1 text-base-content/75">
+						<Clock3 size={12} />
+						40 mins • min 250 words
 					</span>
 				</div>
-				<h3 class="my-3 text-sm font-bold">Academic Discursive Essay</h3>
-				<p class="mb-2 truncate text-xs text-[#69768b]">
+				<h3 class="mt-3 font-semibold">Academic Discursive Essay</h3>
+				<p class="mb-3 truncate text-xs text-base-content/75">
 					Write a formal academic essay presenting structured arguments.
 				</p>
-				<strong class="mb-1 text-xs text-[#7a879b]">Supported Question Types:</strong>
+				<span class="mb-1 text-xs font-semibold text-base-content/75">
+					Supported Question Types:
+				</span>
 				<div class="flex flex-wrap gap-1.5">
-					<div class="badge rounded-xs badge-soft badge-xs">Opinion (Agree/Disagree)</div>
-					<div class="badge rounded-xs badge-soft badge-xs">Discussion (Both Views)</div>
-					<div class="badge rounded-xs badge-soft badge-xs">Advantages & Disadvantages</div>
-					<div class="badge rounded-xs badge-soft badge-xs">Problems & Solutions</div>
-					<div class="badge rounded-xs badge-soft badge-xs">Two-Part Direct Questions</div>
+					<div class="badge badge-soft badge-xs">Opinion (Agree/Disagree)</div>
+					<div class="badge badge-soft badge-xs">Discussion (Both Views)</div>
+					<div class="badge badge-soft badge-xs">Advantages & Disadvantages</div>
+					<div class="badge badge-soft badge-xs">Problems & Solutions</div>
+					<div class="badge badge-soft badge-xs">Two-Part Direct Questions</div>
 				</div>
-				<a class="btn mt-auto btn-primary" href={resolve("/practice/task/2")}>
-					Start Task 2 Practice <ArrowRight size={15} strokeWidth={2.5} />
+				<a class="btn mt-auto btn-outline btn-primary" href={resolve("/practice/task/2")}>
+					Start Task 2 Practice
+					<ArrowRight size="1em" />
 				</a>
 			</article>
 		</div>
 
-		<aside class="overflow-hidden rounded-xl border border-[#e1e6ef] bg-white p-4">
-			<div class="mb-4 flex justify-between gap-2">
+		<aside
+			class="flex flex-col gap-2 overflow-hidden rounded-box border border-base-content/20 bg-base-100 p-4 hover:border-primary">
+			<div class="mb-2 flex justify-between">
 				<div>
-					<h2 class="text-[13px] font-bold">Four-Criteria Evaluation</h2>
-					<p class="mt-1 text-[9px] whitespace-nowrap text-[#738097]">
-						Official IELTS assessment criteria breakdown across past sessions
+					<h2 class="font-semibold">Evaluation Result</h2>
+					<p class="text-xs whitespace-nowrap text-base-content/75">
+						IELTS assessment criteria breakdown across past sessions
 					</p>
 				</div>
-				<span
-					class="h-fit rounded bg-[#f0f0ff] px-1.5 py-1 text-[8px] font-extrabold whitespace-nowrap text-[#5c51e8]">
+				<span class="badge badge-soft badge-sm whitespace-nowrap badge-primary">
 					AI Estimated Band: 6.5
 				</span>
 			</div>
-			{#each criteria as criterion (criterion.name)}
-				<div class="mb-4">
-					<div class="flex justify-between text-[10px]">
-						<strong>
+			{#each data.criteria as criterion (criterion.name)}
+				<div class="flex flex-col gap-1">
+					<div class="flex justify-between text-sm">
+						<a class="font-semibold" href={resolve("/")}>
 							{criterion.name}
-							<em
-								class:text-[#6d7688]={criterion.direction === "steady"}
-								class="ml-0.5 text-[#039b78] not-italic">
-								{criterion.direction === "steady" ? "→" : "↑"}
-							</em>
-						</strong>
+						</a>
 						<b class={criterion.scoreColor}>{criterion.score}</b>
 					</div>
-					<div class="my-1.5 h-1.25 overflow-hidden rounded bg-[#edf0f5]">
-						<span class={`block h-full rounded ${criterion.bar}`}></span>
+					<!-- TODO: Migrate to progress tag -->
+					<div class="flex flex-col gap-1">
+						<div class="h-1.25 overflow-hidden rounded bg-base-100">
+							<span class={`block h-full rounded ${criterion.bar}`}></span>
+						</div>
+						<small class="text-xs text-base-content/75">{criterion.note}</small>
 					</div>
-					<small class="text-[8px] text-[#8290a4]">{criterion.note}</small>
 				</div>
 			{/each}
-			<p class="m-0 text-[8px] text-[#8290a4]">
-				▣ Diagnostic estimate based on official public descriptors. Not an official IELTS score.
-			</p>
 		</aside>
 	</section>
 
-	<section class="mt-6 grid w-full grid-cols-1 gap-4 lg:grid-cols-[1.58fr_1fr]">
-		<div class="rounded-xl border border-[#e1e6ef] bg-white p-3.5">
+	<section class="mt-4 grid w-full grid-cols-1 gap-4 lg:grid-cols-[1.55fr_1fr]">
+		<div class="rounded-box border border-base-content/20 bg-base-100 p-3.5 hover:border-primary">
 			<div class="mb-2.5 flex items-center justify-between">
-				<h2 class="text-[12px] font-bold">Recent Practice Sessions</h2>
-				<a
-					class="flex items-center text-[9px] font-extrabold text-[#5a50ea] no-underline"
-					href={resolve("/")}>
+				<h2 class="text-sm font-semibold">Recent Practice Sessions</h2>
+				<a class="flex items-center text-xs font-semibold text-primary" href={resolve("/")}>
 					View complete history <ChevronRight size={14} />
 				</a>
 			</div>
-			{#each sessions as session (session.title)}
+			{#each data.sessions as session (session.title)}
 				<div
-					class="mt-1.5 grid min-h-7.5 grid-cols-[42px_minmax(0,1fr)_43px] items-center gap-1.5 rounded-md bg-[#f1f4f8] px-2.5 text-[9px] sm:grid-cols-[42px_minmax(170px,1fr)_55px_110px_43px]">
-					<span class="w-fit rounded bg-[#e8eaff] px-1.5 py-1 text-[8px] text-[#5a50eb]">
+					class="mt-1.5 grid min-h-7.5 cursor-pointer grid-cols-[45px_minmax(0,1fr)_120px] items-center gap-1.5 rounded-box bg-base-200 px-2.5 text-xs hover:bg-base-300 sm:grid-cols-[45px_minmax(170px,1fr)_70px_120px]">
+					<span class="badge rounded-box badge-soft badge-xs badge-primary">
 						{session.task}
 					</span>
-					<strong class="truncate">{session.title}</strong>
-					<small class="hidden text-[8px] text-[#7d899c] sm:block">{session.meta}</small>
-					<span class="hidden text-right text-[8px] text-[#7d899c] sm:block">
-						Area: {session.area}
-					</span>
-					<b class="text-right text-[9px]">Band {session.band}</b>
+					<span class="truncate font-semibold">{session.title}</span>
+					<small class="hidden text-xs text-base-content/75 sm:block">{session.meta}</small>
+					<span class="text-right text-xs">Overall band {session.band}</span>
 				</div>
 			{/each}
 		</div>
-		<div class="relative min-h-37.75 overflow-hidden rounded-xl bg-[#10182e] p-4 text-white">
-			<div class="text-[8px] font-extrabold text-[#8293f2]">
-				<MessageCircle size={11} /> CONVERSATIONAL TUTOR
+		<div class="relative min-h-37.75 overflow-hidden rounded-box bg-[#10182e] p-4">
+			<div class="flex gap-1 text-xs font-bold text-[#8293f2]">
+				<MessageCircle size="1em" />
+				AI TUTOR
 			</div>
-			<h2 class="my-2 text-[13px] font-bold">Real-Time Socratic Guidance While You Write</h2>
-			<p class="max-w-[320px] text-[9px] leading-[1.4] text-[#a3afc3]">
+			<h2 class="mt-2 text-sm font-semibold text-white">Guidance While You Write</h2>
+			<p class="max-w-[320px] text-xs text-white/50">
 				Get contextual hints mapped to official IELTS criteria right as you construct paragraphs. No
-				full essay rewrites — pure guided learning.
+				full essay rewrites - pure guided learning.
 			</p>
-			<div class="mt-6 flex flex-wrap gap-3 text-[8px] font-bold text-[#d5b829]">
-				<span class="text-[#54b997]"><Check size={12} /> Sentence-level cues</span>
-				<span><Check size={12} /> Socratic questions</span>
-				<span><Check size={12} /> 4-criteria checks</span>
+			<div class="mt-6 flex flex-wrap gap-3 text-xs font-semibold">
+				<span class="text-success"><Check size="1em" /> Sentence-level cues</span>
+				<span class="text-warning"><Check size="1em" /> Socratic questions</span>
+				<span class="text-info"><Check size="1em" /> 4-criteria checks</span>
 			</div>
-			<Sparkles class="absolute top-4 right-4 text-[#424a69]" size={22} />
+			<Sparkles class="absolute top-4 right-4 text-warning" size="1.5em" />
 		</div>
 	</section>
 </main>
